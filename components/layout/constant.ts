@@ -1,5 +1,3 @@
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import MedicationLiquidIcon from '@mui/icons-material/MedicationLiquid';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';

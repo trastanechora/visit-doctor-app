@@ -1,4 +1,6 @@
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useCallback, useState } from 'react';
+import { useRouter } from 'next/router'
+
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -15,8 +17,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 
 import { drawerWidth, openedMixin, closedMixin, DrawerHeader } from './style'
 import { menuList } from './constant'
@@ -61,8 +61,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const Dashboard: FC<PropsWithChildren> = ({ children }) => {
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const router = useRouter()
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -71,6 +71,17 @@ const Dashboard: FC<PropsWithChildren> = ({ children }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const redirectTo = useCallback((link: string) => {
+    if (router.asPath === link) {
+      return;
+    }
+    router.push(link);
+  }, [router])
+
+  const isSelected = useCallback((link: string) => {
+    return router.asPath === link;
+  }, [router])
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -117,6 +128,8 @@ const Dashboard: FC<PropsWithChildren> = ({ children }) => {
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={() => redirectTo(menuItem.path)}
+                selected={isSelected(menuItem.path)}
               >
                 <ListItemIcon
                   sx={{
