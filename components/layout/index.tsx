@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren, useCallback, useState } from 'react';
 import { useRouter } from 'next/router'
 
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import Image from 'next/image'
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -20,6 +21,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { drawerWidth, openedMixin, closedMixin, DrawerHeader } from './style'
 import { menuList } from './constant'
+import styles from '../../styles/Home.module.css'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -149,6 +151,18 @@ const Dashboard: FC<PropsWithChildren> = ({ children }) => {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {children}
+        <footer className={styles.footer}>
+          <a
+            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Powered by{' '}
+            <span className={styles.logo}>
+              <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+            </span>
+          </a>
+        </footer>
       </Box>
     </Box>
   );
