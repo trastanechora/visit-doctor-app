@@ -1,29 +1,33 @@
-// import { google } from 'googleapis';
-import { initDB } from './init';
-
-const DOCTOR_LAST_COLUMN = 'P'
+import { initList, initFilter, initSingle } from './init';
+import { DOCTOR_LAST_COLUMN } from '../constants/doctor'
 
 export const getAllDoctor = async (offset: number, limit: number) => {
-  const { keyRow, headerRow, dataRow } = await initDB({
+  const { headerCols, dataRows } = await initList({
     sheetName: 'Doctor',
     lastColumn: DOCTOR_LAST_COLUMN,
     offset,
     limit
   });
 
-  const list = dataRow!.map(row => {
-    const processedRow: any = {};
-    keyRow!.forEach((key, index) => {
-      processedRow[key] = row[index];
-    });
-    return processedRow;
-  })
+  return { headerCols, dataRows };
+}
 
-  return {
-    list,
-    header: keyRow,
-    headerObjects: headerRow!.map(objectString => {
-      return JSON.parse(objectString)
-    }),
-  }
+export const getDoctorByFilter = async (filter: string) => {
+  const { headerCols, dataRows } = await initFilter({
+    sheetName: 'Doctor',
+    lastColumn: DOCTOR_LAST_COLUMN,
+    filter,
+  });
+
+  return { headerCols, dataRows };
+}
+
+export const getDoctorById = async (id: string) => {
+  const { ...response } = await initSingle({
+    sheetName: 'Doctor',
+    lastColumn: DOCTOR_LAST_COLUMN,
+    id,
+  });
+
+  return { ...response };
 }
