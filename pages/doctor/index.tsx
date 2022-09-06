@@ -70,11 +70,11 @@ const DoctorPage: NextPage = () => {
     fetch(`/api/doctor?filter=${joinedFilter}`)
       .then((res) => res.json())
       .then((data) => {
-        const filteredHeader = data.headerObjects.filter((headerObject: any) => !headerObject.isHidden)
+        const filteredHeader = data.headerCols.filter((headerObject: any) => !headerObject.isHidden)
         const processedHeader = filteredHeader.map((headerObject: any) => headerObject.headerObject)
         const processedFilterOptions = filteredHeader.filter((headerObject: any) => headerObject.filterObject.enabled)
         setHeader(processedHeader)
-        setData(data.list)
+        setData(data.dataRows)
         setFilterOptions(processedFilterOptions)
         setLoading(false)
         console.warn(data)
