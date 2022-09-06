@@ -32,6 +32,7 @@ const handler = async (
   if (id) {
     const processedResult = await getDoctorById(id)
     res.status(200).json({ ...processedResult })
+    return;
   }
 
   const processedResult = await getAllDoctor(Number(offset), Number(limit))
