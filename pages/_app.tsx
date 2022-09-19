@@ -1,5 +1,5 @@
 import { SessionProvider } from "next-auth/react"
-import Layout from '../components/Layout/index'
+import Layout from '../components/layout'
 import { AuthProvider } from '../context/auth'
 
 import type { NextPageWithCustomProps } from '../types/custom'

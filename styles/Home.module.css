@@ -25,7 +25,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  color: #0070f3;
+  text-decoration: none;
+  margin-left: 4px;
 }
 
 .title a {

@@ -5,22 +5,22 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 
 export const menuList = [
   {
-    text: 'Doctor',
+    text: 'Dokter',
     icon: ContactEmergencyIcon,
     path: '/doctor'
   },
   {
-    text: 'Medicine',
+    text: 'Obat',
     icon: MedicationLiquidIcon,
     path: '/medicine'
   },
   {
-    text: 'Patient',
+    text: 'Pasien',
     icon: AccessibilityNewIcon,
     path: '/patient'
   },
   {
-    text: 'Visit',
+    text: 'Kunjungan Periksa',
     icon: DateRangeIcon,
     path: '/visit'
   },

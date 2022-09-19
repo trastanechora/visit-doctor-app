@@ -1,15 +1,12 @@
 import Head from 'next/head'
 import Button from '@mui/material/Button';
 import { signIn } from "next-auth/react";
-import { useRouter } from 'next/router';
 
 import styles from '../../styles/Home.module.css'
 
 import type { NextPage } from 'next'
 
 const LoginPage: NextPage = () => {
-  const router = useRouter()
-
   const doLogin = () => {
     signIn('google', { callbackUrl: '/doctor' })
   }
@@ -23,13 +20,13 @@ const LoginPage: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Visit Doctor App</a>
+          Selamat datang di <a href="https://nextjs.org">Visit Doctor App</a>
         </h1>
 
         <p className={styles.description}>
-          Please do sign in from this button below:
+          Mohon login dengan akun Google Anda yang sudah terdaftar melalui tombol berikut:
         </p>
-        <Button variant="outlined" onClick={doLogin}>Sign In</Button>
+        <Button variant="outlined" onClick={doLogin} sx={{ textTransform: 'none' }}>Masuk</Button>
       </main>
     </div>
   )

@@ -5,29 +5,28 @@ import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-const Home: NextPage = () => {
+const ComingSoonPage: NextPage = () => {
   const router = useRouter()
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Visit Doctor App</title>
+        <title>Coming Soon | Visit Doctor App</title>
         <meta name="description" content="App for doctor's archive management" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Selamat datang di <br /><a href="">Visit Doctor App</a>
+          Fitur ini akan segera hadir di <br /><a href="">Visit Doctor App</a>
         </h1>
 
         <p className={styles.description}>
-          Aplikasi manajemen arsip untuk dokter
+          Untuk saat ini kami sedang menyiapkan layanan terbaik untuk Anda
         </p>
 
         <Box sx={{ display: 'flex' }}>
-          <Button variant="outlined" onClick={() => router.push('/comingsoon')} sx={{ textTransform: 'none', marginRight: 1 }}>Saya Pasien</Button>
-          <Button variant="outlined" onClick={() => router.push('/login')} sx={{ textTransform: 'none', marginLeft: 1 }}>Saya Dokter</Button>
+          <Button variant="outlined" onClick={() => router.back()} sx={{ textTransform: 'none' }}>Kembali</Button>
         </Box>
       </main>
 
@@ -45,4 +44,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default ComingSoonPage
