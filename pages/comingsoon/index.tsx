@@ -1,9 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+
+import styles from '../../styles/Home.module.css'
 
 const ComingSoonPage: NextPage = () => {
   const router = useRouter()
