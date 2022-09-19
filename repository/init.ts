@@ -20,6 +20,11 @@ interface InitSingleProps {
   email?: string;
 }
 
+interface InitJoinedDBProps {
+  sheetName: string;
+  lastColumn: string;
+}
+
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_API_CLIENT_EMAIL,
@@ -146,4 +151,52 @@ export const initSingle = async (props: InitSingleProps) => {
   })
 
   return { ...dataRows[0] };
+}
+
+export const initJoin = async (props: InitJoinedDBProps) => {
+  const {
+    sheetName,
+    lastColumn,
+  } = props
+
+  const authClientObject = await auth.getClient();
+  const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
+
+  const readData = await googleSheetsInstance.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${sheetName}!A1:${lastColumn}1`,
+  })
+
+  const headerRow = readData.data.values ? readData.data.values[0] : [];
+
+  const queryData = await googleSheetsInstance.spreadsheets.values.update({
+    spreadsheetId,
+    range: `QueryJoin!A1:${lastColumn}`,
+    includeValuesInResponse: true,
+    valueInputOption: 'USER_ENTERED',
+    responseValueRenderOption: 'FORMATTED_VALUE',
+    requestBody: {
+      values: [
+        [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.visit_date, v.temperature, v.weight, v.height, v.diagnosis, v.scheduled_control_date, v.status, v.total_charge FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id", ${sheetName}!A2:${lastColumn}, Patient!A2:K, Doctor!A2:P)`]
+      ],
+    }
+  })
+
+  const rawKeys = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values[0] : [] : [];
+  const dataRow = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values : [] : [];
+  dataRow.shift();
+
+  const dataRows = dataRow!.map(row => {
+    const processedRow: any = {};
+    rawKeys!.forEach((key, index) => {
+      processedRow[key] = row[index];
+    });
+    return processedRow;
+  })
+
+  const headerCols = headerRow.map(objectString => {
+    return JSON.parse(objectString)
+  })
+
+  return { headerCols, dataRows };
 }
