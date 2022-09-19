@@ -31,3 +31,13 @@ export const getDoctorById = async (id: string) => {
 
   return { ...response };
 }
+
+export const getDoctorByEmail = async (email: string) => {
+  const { ...response } = await initSingle({
+    sheetName: 'Doctor',
+    lastColumn: DOCTOR_LAST_COLUMN,
+    email,
+  });
+
+  return { ...response };
+}

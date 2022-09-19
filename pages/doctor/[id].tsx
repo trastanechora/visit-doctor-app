@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider } from '@mui/material';
+
 import styles from '../../styles/Doctor.module.css'
 
-const DoctorDetailPage: NextPage = () => {
+import type { NextPageWithCustomProps } from '../../types/custom'
+
+const DoctorDetailPage: NextPageWithCustomProps = () => {
   const [isLoading, setLoading] = useState<boolean>(false)
   const [detail, setDetail] = useState<any>({})
 
@@ -18,7 +20,6 @@ const DoctorDetailPage: NextPage = () => {
       fetch(`/api/doctor?id=${id}`)
         .then((res) => res.json())
         .then((data) => {
-          console.warn(data)
           setLoading(false)
           setDetail(data);
         })
@@ -26,8 +27,6 @@ const DoctorDetailPage: NextPage = () => {
   }, [id]);
 
   if (isLoading) return <p>Loading...</p>
-
-  console.warn('current site id', id);
 
   return (
     <div className={styles.container}>
@@ -129,4 +128,5 @@ const DoctorDetailPage: NextPage = () => {
   )
 }
 
+DoctorDetailPage.isRequireAuth = true;
 export default DoctorDetailPage;

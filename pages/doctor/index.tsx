@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/router'
 import { DataGrid } from '@mui/x-data-grid';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Container, Box, TextField, Select, MenuItem, InputLabel, FormControl, Button } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import styles from '../../styles/Doctor.module.css'
 import { genderList, statusList, initialFilterState } from '../../constants/doctor'
 
-const DoctorPage: NextPage = () => {
+import type { NextPageWithCustomProps } from '../../types/custom'
+
+const DoctorPage: NextPageWithCustomProps = () => {
   const [header, setHeader] = useState<any[]>([])
   const [data, setData] = useState<any[]>([])
   const [filterOptions, setFilterOptions] = useState<any[]>([])
@@ -31,9 +33,6 @@ const DoctorPage: NextPage = () => {
         setData(data.dataRows)
         setFilterOptions(processedFilterOptions)
         setLoading(false)
-
-        console.warn(data)
-        console.warn(processedFilterOptions)
       })
   }, [])
 
@@ -77,13 +76,10 @@ const DoctorPage: NextPage = () => {
         setData(data.dataRows)
         setFilterOptions(processedFilterOptions)
         setLoading(false)
-        console.warn(data)
-        console.warn(processedFilterOptions)
       })
   }
 
   const handleOnRowClick = (event: any) => {
-    console.warn(event)
     router.push(`/doctor/${event.row.id}`);
   }
 
@@ -199,4 +195,5 @@ const DoctorPage: NextPage = () => {
   )
 }
 
+DoctorPage.isRequireAuth = true;
 export default DoctorPage;

@@ -1,12 +1,30 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import Layout from '../components/layout'
+import { SessionProvider } from "next-auth/react"
+import Layout from '../components/Layout'
+import { AuthProvider } from '../context/auth'
 
-function MyApp({ Component, pageProps }: AppProps) {
+import type { NextPageWithCustomProps } from '../types/custom'
+import type { AppProps } from 'next/app'
+
+import '../styles/globals.css'
+
+type AppPropsWithCustomProps = AppProps & {
+  Component: NextPageWithCustomProps
+}
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWithCustomProps) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>)
+    <SessionProvider session={session} refetchInterval={30 * 60} refetchOnWindowFocus={false}>
+      {Component.isRequireAuth ? (
+        <AuthProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AuthProvider>
+      ) : (
+        <Component {...pageProps} />
+      )}
+    </SessionProvider>
+  )
 }
 
 export default MyApp

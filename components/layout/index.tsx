@@ -1,14 +1,14 @@
-import { FC, PropsWithChildren, useCallback, useState } from 'react';
-import { useRouter } from 'next/router'
+import { FC, PropsWithChildren, useCallback, useState, MouseEvent, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { signOut } from "next-auth/react"
 
 import { styled } from '@mui/material/styles';
-import Image from 'next/image'
+import Image from 'next/image';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -18,7 +18,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
 
+import { useAuthState } from '../../context/auth'
 import { drawerWidth, openedMixin, closedMixin, DrawerHeader } from './style'
 import { menuList } from './constant'
 import styles from '../../styles/Home.module.css'
@@ -62,17 +67,31 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const Dashboard: FC<PropsWithChildren> = ({ children }) => {
-  const [open, setOpen] = useState(false);
-  const router = useRouter()
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
+const Dashboard: FC<PropsWithChildren> = ({ children }) => {
+  const router = useRouter()
+  const { user } = useAuthState()
+
+  // Drawer controller
+  const [open, setOpen] = useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const isSelected = useCallback((link: string) => {
+    return router.asPath === link;
+  }, [router])
+  // ============
+
+  // Account menu controller
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+  // ============
 
   const redirectTo = useCallback((link: string) => {
     if (router.asPath === link) {
@@ -81,13 +100,12 @@ const Dashboard: FC<PropsWithChildren> = ({ children }) => {
     router.push(link);
   }, [router])
 
-  const isSelected = useCallback((link: string) => {
-    return router.asPath === link;
-  }, [router])
+  const handleLogout = () => {
+    signOut();
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           {!open ? (
@@ -113,9 +131,37 @@ const Dashboard: FC<PropsWithChildren> = ({ children }) => {
               <ChevronLeftIcon />
             </IconButton>)}
 
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Visit Doctor App
           </Typography>
+          <Box sx={{ flexGrow: 0, display: 'flex' }}>
+            <Typography variant="caption" sx={{ alignSelf: 'center', mr: 2 }}>{user.name}</Typography>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleClick} sx={{ p: 0 }}>
+                <Avatar alt={user.name} src={user.image} />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={openMenu}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleLogout}>
+                <Typography textAlign="center">Log Out</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

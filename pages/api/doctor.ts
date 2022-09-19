@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-// import { getAllDoctor, getDoctor } from '../../repository/doctor'
-import { getAllDoctor, getDoctorByFilter, getDoctorById } from '../../repository/doctor'
+import { getAllDoctor, getDoctorByFilter, getDoctorById, getDoctorByEmail } from '../../repository/doctor'
 
 type RequestParameters = {
   query: RequestParametersQuery
@@ -11,6 +10,7 @@ type RequestParametersQuery = {
   offset?: number;
   limit?: number
   filter?: string;
+  email?: string;
 }
 
 type ResponseData = {
@@ -21,16 +21,22 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) => {
-  const { query: { id, offset = 1, limit = 10, filter = '' } }: RequestParameters = req;
+  const { query: { id, email, offset = 1, limit = 10, filter = '' } }: RequestParameters = req;
 
-  if (filter) {
-    const processedResult = await getDoctorByFilter(filter)
+  if (email) {
+    const processedResult = await getDoctorByEmail(email)
     res.status(200).json({ ...processedResult })
     return;
   }
 
   if (id) {
     const processedResult = await getDoctorById(id)
+    res.status(200).json({ ...processedResult })
+    return;
+  }
+
+  if (filter) {
+    const processedResult = await getDoctorByFilter(filter)
     res.status(200).json({ ...processedResult })
     return;
   }

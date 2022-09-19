@@ -16,7 +16,8 @@ interface InitFilteredDBProps {
 interface InitSingleProps {
   sheetName: string;
   lastColumn: string;
-  id: string;
+  id?: string;
+  email?: string;
 }
 
 const auth = new google.auth.GoogleAuth({
@@ -114,7 +115,7 @@ export const initFilter = async (props: InitFilteredDBProps) => {
 }
 
 export const initSingle = async (props: InitSingleProps) => {
-  const { id, sheetName, lastColumn } = props
+  const { id, email, sheetName, lastColumn } = props
 
   const authClientObject = await auth.getClient();
   const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
@@ -127,7 +128,7 @@ export const initSingle = async (props: InitSingleProps) => {
     responseValueRenderOption: 'FORMATTED_VALUE',
     requestBody: {
       values: [
-        [`=QUERY(${sheetName}!A2:${lastColumn},"select * where (A = '${id}')", 1)`]
+        [id ? `=QUERY(${sheetName}!A2:${lastColumn},"select * where (A = '${id}')", 1)` : `=QUERY(${sheetName}!A2:${lastColumn},"select * where (C = '${email}')", 1)`]
       ],
     }
   })
