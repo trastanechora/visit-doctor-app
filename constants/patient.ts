@@ -1,4 +1,4 @@
-export const PATIENT_LAST_COLUMN = 'K'
+export const PATIENT_LAST_COLUMN = 'L'
 
 export const genderList = [
   {
@@ -28,5 +28,5 @@ export const initialFilterState = {
   gender: '',
   genderType: 'D',
   status: '',
-  maritalStatusType: 'F'
+  maritalStatusType: 'G'
 }

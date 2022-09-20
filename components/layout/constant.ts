@@ -20,7 +20,7 @@ export const menuList = [
     path: '/patient'
   },
   {
-    text: 'Kunjungan Periksa',
+    text: 'Rekam Medis',
     icon: DateRangeIcon,
     path: '/visit'
   },
