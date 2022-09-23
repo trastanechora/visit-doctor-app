@@ -1,4 +1,4 @@
-import { initList, initFilter, initSingle } from './init';
+import { initList, initFilter, initSingle, initListOptions } from './init';
 import { PATIENT_LAST_COLUMN } from '../constants/patient'
 
 export const getAllPatient = async (offset: number, limit: number) => {
@@ -30,4 +30,14 @@ export const getPatientById = async (id: string) => {
   });
 
   return { ...response };
+}
+
+export const getPatientOptions = async () => {
+  const response = await initListOptions({
+    sheetName: 'Patient',
+    nameColumn: 'C',
+    recordColumn: 'B'
+  });
+
+  return response;
 }

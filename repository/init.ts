@@ -25,6 +25,12 @@ interface InitJoinedDBProps {
   lastColumn: string;
 }
 
+interface InitListOptionsProps {
+  sheetName: string;
+  nameColumn: string;
+  recordColumn?: string;
+}
+
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_API_CLIENT_EMAIL,
@@ -199,4 +205,51 @@ export const initJoin = async (props: InitJoinedDBProps) => {
   })
 
   return { headerCols, dataRows };
+}
+
+export const initListOptions = async (props: InitListOptionsProps) => {
+  const {
+    sheetName,
+    nameColumn,
+    recordColumn
+  } = props
+
+  const authClientObject = await auth.getClient();
+  const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
+
+  const readData = await googleSheetsInstance.spreadsheets.values.batchGet({
+    spreadsheetId,
+    ranges: recordColumn ? [
+      `${sheetName}!A3:A`,
+      `${sheetName}!${nameColumn}3:${nameColumn}`,
+      `${sheetName}!${recordColumn}3:${recordColumn}`
+    ] : [
+      `${sheetName}!A3:A`,
+      `${sheetName}!${nameColumn}3:${nameColumn}`
+    ]
+  })
+
+  const rawIdStack = readData.data.valueRanges ? readData.data.valueRanges[0].values : [];
+  const rawNameStack = readData.data.valueRanges ? readData.data.valueRanges[1].values : [];
+
+  const idStack = rawIdStack?.map((id) => {
+    const [rawId] = id;
+    return rawId;
+  })
+
+  const nameStack = rawNameStack?.map((name) => {
+    const [rawName] = name;
+    return rawName;
+  })
+
+  if (recordColumn) {
+    const rawRecordStack = readData.data.valueRanges ? readData.data.valueRanges[2].values : [];
+    const recordStack = rawRecordStack?.map((rm) => {
+      const [rawRm] = rm;
+      return rawRm;
+    })
+    return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '', record_number: recordStack ? recordStack[index] : '' }));
+  }
+
+  return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '' }));
 }

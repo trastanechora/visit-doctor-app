@@ -1,4 +1,4 @@
-import { initList, initFilter, initSingle } from './init';
+import { initList, initFilter, initSingle, initListOptions } from './init';
 import { DOCTOR_LAST_COLUMN } from '../constants/doctor'
 
 export const getAllDoctor = async (offset: number, limit: number) => {
@@ -40,4 +40,13 @@ export const getDoctorByEmail = async (email: string) => {
   });
 
   return { ...response };
+}
+
+export const getDoctorOptions = async () => {
+  const response = await initListOptions({
+    sheetName: 'Doctor',
+    nameColumn: 'B'
+  });
+
+  return response;
 }

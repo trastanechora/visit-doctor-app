@@ -1,11 +1,14 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
-import { Typography, Box, Divider, List, ListItem, ListItemText, Button } from '@mui/material';
+import { Typography, Box, Divider, Button, TextField } from '@mui/material';
+// import Autocomplete from '@mui/material/Autocomplete';
 
 import styles from '../../styles/Visit.module.css'
 
 import type { NextPageWithCustomProps } from '../../types/custom'
+
+import { icdtenList } from '../../datasets/icd10'
 
 const VisitDetailPage: NextPageWithCustomProps = () => {
   const router = useRouter()
@@ -33,6 +36,13 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
 
   const redirectToDoctor = () => {
     router.push(`/doctor/${detail.doctor?.id}`)
+  }
+
+  const getDiagnosis = (code: string) => {
+    const diagnosis = icdtenList.find((icdten) => icdten.code === code)
+    if (!diagnosis) return 'Diagnosa tidak ada';
+
+    return `${diagnosis.code} - ${diagnosis.idn}`;
   }
 
   const calculateAge = (stringBirthDate: string) => {
@@ -104,6 +114,13 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Keluhan:
             </Typography>
+            {/* <Autocomplete
+              fullWidth
+              id="combo-box-demo"
+              options={icdtenList}
+              getOptionLabel={(option) => `${option.code} - ${option.idn}`}
+              renderInput={(params) => <TextField {...params} label="Diagnosis" />}
+            /> */}
             {/* <List dense>
                   {
                     detail.symptoms?.map((symptom: string, index: number) => (<ListItem key={`${index}-${symptom}`}>
@@ -121,7 +138,7 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
               Diagnosa:
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {detail.diagnosis}
+              {getDiagnosis(detail.diagnosis)}
             </Typography>
           </Box>
         </Box>

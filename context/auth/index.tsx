@@ -9,6 +9,7 @@ import type { Props, AuthState, AuthAction, UserObject } from './types'
 
 const initialState: AuthState = {
   user: {
+    id: '',
     name: '',
     email: '',
     image: '',
@@ -34,6 +35,7 @@ export const AuthProvider: FC<Props> = (props) => {
   useEffect(() => {
     if (!loading && session) {
       const user: UserObject = {
+        id: `${getCookie('user_id')}`,
         name: `${getCookie('name')}`,
         email: `${getCookie('email')}`,
         image: `${getCookie('image')}`,
