@@ -1,43 +1,46 @@
 import { initList, initFilter, initSingle, initListOptions } from './init';
-import { PATIENT_LAST_COLUMN } from '../constants/patient'
+import { SHEET_NAME, LAST_COLUMN, TABLE_ENTITY } from '../constants/patient'
 
 export const getAllPatient = async (offset: number, limit: number) => {
-  const { headerCols, dataRows } = await initList({
-    sheetName: 'Patient',
-    lastColumn: PATIENT_LAST_COLUMN,
+  const dataRows = await initList({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     offset,
     limit
   });
 
-  return { headerCols, dataRows };
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, offset, limit, data: dataRows };
 }
 
 export const getPatientByFilter = async (filter: string) => {
-  const { headerCols, dataRows } = await initFilter({
-    sheetName: 'Patient',
-    lastColumn: PATIENT_LAST_COLUMN,
+  const dataRows = await initFilter({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     filter,
   });
 
-  return { headerCols, dataRows };
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, filter, data: dataRows };
 }
 
 export const getPatientById = async (id: string) => {
-  const { ...response } = await initSingle({
-    sheetName: 'Patient',
-    lastColumn: PATIENT_LAST_COLUMN,
+  const response = await initSingle({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     id,
   });
 
-  return { ...response };
+  return { table_name: SHEET_NAME, data: response };
 }
 
 export const getPatientOptions = async () => {
   const response = await initListOptions({
-    sheetName: 'Patient',
+    sheetName: SHEET_NAME,
     nameColumn: 'C',
     recordColumn: 'B'
   });
 
-  return response;
+  return { table_name: SHEET_NAME, data: response };
 }

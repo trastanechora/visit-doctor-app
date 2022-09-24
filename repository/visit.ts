@@ -1,30 +1,41 @@
-import { initJoin, initSingle } from './init';
-import { VISIT_LAST_COLUMN } from '../constants/visit'
-import { PATIENT_LAST_COLUMN } from '../constants/patient'
-import { DOCTOR_LAST_COLUMN } from '../constants/doctor'
+import { initJoin, initSingle, initFilteredJoin } from './init';
+import { SHEET_NAME, TABLE_ENTITY, LAST_COLUMN } from '../constants/visit'
+import { LAST_COLUMN as PATIENT_LAST_COLUMN, TABLE_ENTITY as PATIENT_TABLE_ENTITY, SHEET_NAME as PATIENT_SHEET_NAME } from '../constants/patient'
+import { LAST_COLUMN as DOCTOR_LAST_COLUMN, TABLE_ENTITY as DOCTOR_TABLE_ENTITY, SHEET_NAME as DOCTOR_SHEET_NAME } from '../constants/doctor'
 
 export const getAllVisit = async (offset: number, limit: number) => {
-  const { headerCols, dataRows } = await initJoin({
-    sheetName: 'Visit',
-    lastColumn: VISIT_LAST_COLUMN
+  const dataRows = await initJoin({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN
   });
 
-  return { headerCols, dataRows };
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, offset, limit, data: dataRows };
+}
+
+export const getFilteredVisit = async (offset: number, limit: number, filter: string) => {
+  const dataRows = await initFilteredJoin({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
+    filter
+  });
+
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, offset, limit, data: dataRows };
 }
 
 export const getVisitById = async (id: string) => {
   const visit = await initSingle({
-    sheetName: 'Visit',
-    lastColumn: VISIT_LAST_COLUMN,
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     id,
   });
 
-  // visit.diagnosis = JSON.parse(visit.diagnosis);
-  // visit.symptomp = JSON.parse(visit.symptomp);
-
   if (visit.patient_id) {
     const patient = await initSingle({
-      sheetName: 'Patient',
+      sheetName: PATIENT_SHEET_NAME,
+      tableEntity: PATIENT_TABLE_ENTITY,
       lastColumn: PATIENT_LAST_COLUMN,
       id: visit.patient_id,
     });
@@ -33,7 +44,8 @@ export const getVisitById = async (id: string) => {
 
   if (visit.patient_id) {
     const doctor = await initSingle({
-      sheetName: 'Doctor',
+      sheetName: DOCTOR_SHEET_NAME,
+      tableEntity: DOCTOR_TABLE_ENTITY,
       lastColumn: DOCTOR_LAST_COLUMN,
       id: visit.doctor_id,
     });
@@ -41,5 +53,16 @@ export const getVisitById = async (id: string) => {
 
   }
 
-  return { ...visit };
+  return { table_name: SHEET_NAME, data: visit };
+}
+
+export const getVisitByFilter = async (filter: string) => {
+  const dataRows = await initFilteredJoin({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
+    filter,
+  });
+
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, filter, data: dataRows };
 }

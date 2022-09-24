@@ -19,9 +19,9 @@ const PatientDetailPage: NextPageWithCustomProps = () => {
       setLoading(true)
       fetch(`/api/patient?id=${id}`)
         .then((res) => res.json())
-        .then((data) => {
+        .then((responseObject) => {
           setLoading(false)
-          setDetail(data);
+          setDetail(responseObject.data);
         })
     }
   }, [id]);
@@ -55,7 +55,7 @@ const PatientDetailPage: NextPageWithCustomProps = () => {
             NIK:
           </Typography>
           <Typography sx={{ fontWeight: '500' }} variant="body1" gutterBottom>
-            {detail.idNumber}
+            {detail.id_number}
           </Typography>
         </Box>
 
@@ -83,7 +83,7 @@ const PatientDetailPage: NextPageWithCustomProps = () => {
               Status Pernikahan:
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {detail.maritalStatus}
+              {detail.marital_status}
             </Typography>
           </Box>
         </Box>
@@ -101,7 +101,7 @@ const PatientDetailPage: NextPageWithCustomProps = () => {
               Nomor HP Penjamin:
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {detail.guarantorPhone}
+              {detail.guarantor_phone}
             </Typography>
           </Box>
         </Box>

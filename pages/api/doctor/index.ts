@@ -27,24 +27,24 @@ const handler = async (
   if (req.method === 'GET') {
     if (email) {
       const processedResult = await getDoctorByEmail(email)
-      res.status(200).json({ ...processedResult })
+      res.status(200).json(processedResult)
       return;
     }
 
     if (id) {
       const processedResult = await getDoctorById(id)
-      res.status(200).json({ ...processedResult })
+      res.status(200).json(processedResult)
       return;
     }
 
     if (filter) {
       const processedResult = await getDoctorByFilter(filter)
-      res.status(200).json({ ...processedResult })
+      res.status(200).json(processedResult)
       return;
     }
 
     const processedResult = await getAllDoctor(Number(offset), Number(limit))
-    res.status(200).json({ ...processedResult })
+    res.status(200).json(processedResult)
     return;
   }
 

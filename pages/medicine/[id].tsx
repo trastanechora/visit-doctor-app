@@ -19,9 +19,9 @@ const MedicineDetailPage: NextPageWithCustomProps = () => {
       setLoading(true)
       fetch(`/api/medicine?id=${id}`)
         .then((res) => res.json())
-        .then((data) => {
+        .then((responseObject) => {
           setLoading(false)
-          setDetail(data);
+          setDetail(responseObject.data);
         })
     }
   }, [id]);

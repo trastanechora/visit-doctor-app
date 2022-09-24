@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAllVisit, getVisitById } from '../../repository/visit'
+import { getAllVisit, getVisitById, getVisitByFilter } from '../../repository/visit'
 
 type RequestParameters = {
   query: RequestParametersQuery
@@ -24,12 +24,18 @@ const handler = async (
 
   if (id) {
     const processedResult = await getVisitById(id)
-    res.status(200).json({ ...processedResult })
+    res.status(200).json(processedResult)
+    return;
+  }
+
+  if (filter) {
+    const processedResult = await getVisitByFilter(filter)
+    res.status(200).json(processedResult)
     return;
   }
 
   const processedResult = await getAllVisit(Number(offset), Number(limit))
-  res.status(200).json({ ...processedResult })
+  res.status(200).json(processedResult)
   return;
 }
 

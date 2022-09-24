@@ -2,6 +2,7 @@ import { google } from 'googleapis';
 
 interface InitListProps {
   sheetName: string;
+  tableEntity: string[];
   lastColumn: string;
   offset?: number;
   limit?: number;
@@ -9,12 +10,14 @@ interface InitListProps {
 
 interface InitFilteredDBProps {
   sheetName: string;
+  tableEntity: string[];
   lastColumn: string;
   filter: string;
 }
 
 interface InitSingleProps {
   sheetName: string;
+  tableEntity: string[];
   lastColumn: string;
   id?: string;
   email?: string;
@@ -22,7 +25,15 @@ interface InitSingleProps {
 
 interface InitJoinedDBProps {
   sheetName: string;
+  tableEntity: string[];
   lastColumn: string;
+}
+
+interface InitJoinedFilterDBProps {
+  sheetName: string;
+  tableEntity: string[];
+  lastColumn: string;
+  filter: string;
 }
 
 interface InitListOptionsProps {
@@ -43,6 +54,7 @@ const spreadsheetId = process.env.SPREAD_SHEET_ID;
 export const initList = async (props: InitListProps) => {
   const {
     sheetName,
+    tableEntity,
     lastColumn,
     offset = 0,
     limit = 12,
@@ -54,43 +66,33 @@ export const initList = async (props: InitListProps) => {
   const readData = await googleSheetsInstance.spreadsheets.values.batchGet({
     spreadsheetId,
     ranges: [
-      `${sheetName}!A1:${lastColumn}2`,
-      `${sheetName}!A${offset + 2}:${lastColumn}${limit + 2}`
+      `${sheetName}!A${offset + 1}:${lastColumn}${limit + 1}`
     ]
   })
-  const rawKeys = readData.data.valueRanges ? readData.data.valueRanges[0].values ? readData.data.valueRanges[0].values[1] : [] : [];
-  const headerRow = readData.data.valueRanges ? readData.data.valueRanges[0].values ? readData.data.valueRanges[0].values[0] : [] : [];
-  const dataRow = readData.data.valueRanges ? readData.data.valueRanges[1].values : [];
+
+  const dataRow = readData.data.valueRanges ? readData.data.valueRanges[0].values : [];
 
   const dataRows = dataRow!.map(row => {
     const processedRow: any = {};
-    rawKeys!.forEach((key, index) => {
+    tableEntity!.forEach((key, index) => {
       processedRow[key] = row[index];
     });
     return processedRow;
   })
 
-  const headerCols = headerRow.map(objectString => {
-    return JSON.parse(objectString)
-  })
-
-  return { headerCols, dataRows };
+  return dataRows;
 }
 
 export const initFilter = async (props: InitFilteredDBProps) => {
   const {
     sheetName,
+    tableEntity,
     lastColumn,
     filter,
   } = props
 
   const authClientObject = await auth.getClient();
   const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
-
-  const readData = await googleSheetsInstance.spreadsheets.values.get({
-    spreadsheetId,
-    range: `${sheetName}!A1:${lastColumn}1`,
-  })
 
   const queryData = await googleSheetsInstance.spreadsheets.values.update({
     spreadsheetId,
@@ -100,33 +102,27 @@ export const initFilter = async (props: InitFilteredDBProps) => {
     responseValueRenderOption: 'FORMATTED_VALUE',
     requestBody: {
       values: [
-        [`=QUERY(${sheetName}!A2:${lastColumn},"select * where (${filter})", 1)`]
+        [`=QUERY(${sheetName}!A1:${lastColumn},"select * where (${filter})", 1)`]
       ],
     }
   })
 
-  const rawKeys = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values[0] : [] : [];
-  const headerRow = readData.data.values ? readData.data.values[0] : [];
   const dataRow = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values : [] : [];
   dataRow.shift();
 
   const dataRows = dataRow!.map(row => {
     const processedRow: any = {};
-    rawKeys!.forEach((key, index) => {
+    tableEntity!.forEach((key, index) => {
       processedRow[key] = row[index];
     });
     return processedRow;
   })
 
-  const headerCols = headerRow.map(objectString => {
-    return JSON.parse(objectString)
-  })
-
-  return { headerCols, dataRows };
+  return dataRows;
 }
 
 export const initSingle = async (props: InitSingleProps) => {
-  const { id, email, sheetName, lastColumn } = props
+  const { id, email, sheetName, lastColumn, tableEntity } = props
 
   const authClientObject = await auth.getClient();
   const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
@@ -139,41 +135,34 @@ export const initSingle = async (props: InitSingleProps) => {
     responseValueRenderOption: 'FORMATTED_VALUE',
     requestBody: {
       values: [
-        [id ? `=QUERY(${sheetName}!A2:${lastColumn},"select * where (A = '${id}')", 1)` : `=QUERY(${sheetName}!A2:${lastColumn},"select * where (C = '${email}')", 1)`]
+        [id ? `=QUERY(${sheetName}!A1:${lastColumn},"select * where (A = '${id}')", 1)` : `=QUERY(${sheetName}!A1:${lastColumn},"select * where (C = '${email}')", 1)`]
       ],
     }
   })
 
-  const rawKeys = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values[0] : [] : [];
   const dataRow = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values : [] : [];
   dataRow.shift();
 
   const dataRows = dataRow!.map(row => {
     const processedRow: any = {};
-    rawKeys!.forEach((key, index) => {
+    tableEntity!.forEach((key, index) => {
       processedRow[key] = row[index];
     });
     return processedRow;
   })
 
-  return { ...dataRows[0] };
+  return dataRows[0];
 }
 
 export const initJoin = async (props: InitJoinedDBProps) => {
   const {
     sheetName,
+    tableEntity,
     lastColumn,
   } = props
 
   const authClientObject = await auth.getClient();
   const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
-
-  const readData = await googleSheetsInstance.spreadsheets.values.get({
-    spreadsheetId,
-    range: `${sheetName}!A1:${lastColumn}1`,
-  })
-
-  const headerRow = readData.data.values ? readData.data.values[0] : [];
 
   const queryData = await googleSheetsInstance.spreadsheets.values.update({
     spreadsheetId,
@@ -183,28 +172,61 @@ export const initJoin = async (props: InitJoinedDBProps) => {
     responseValueRenderOption: 'FORMATTED_VALUE',
     requestBody: {
       values: [
-        [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.visit_date, v.temperature, v.weight, v.height, v.diagnosis, v.scheduled_control_date, v.status, v.total_charge FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id", ${sheetName}!A2:${lastColumn}, Patient!A2:K, Doctor!A2:P)`]
+        [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.visit_date, v.temperature, v.weight, v.height, v.diagnosis, v.scheduled_control_date, v.status, v.total_charge FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id", ${sheetName}!A1:${lastColumn}, Patient!A1:K, Doctor!A1:P)`]
       ],
     }
   })
 
-  const rawKeys = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values[0] : [] : [];
   const dataRow = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values : [] : [];
   dataRow.shift();
 
   const dataRows = dataRow!.map(row => {
     const processedRow: any = {};
-    rawKeys!.forEach((key, index) => {
+    tableEntity!.forEach((key, index) => {
       processedRow[key] = row[index];
     });
     return processedRow;
   })
 
-  const headerCols = headerRow.map(objectString => {
-    return JSON.parse(objectString)
+  return dataRows;
+}
+
+export const initFilteredJoin = async (props: InitJoinedFilterDBProps) => {
+  const {
+    sheetName,
+    tableEntity,
+    lastColumn,
+    filter
+  } = props
+
+  const authClientObject = await auth.getClient();
+  const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
+
+  const queryData = await googleSheetsInstance.spreadsheets.values.update({
+    spreadsheetId,
+    range: `QueryJoin!A1:${lastColumn}`,
+    includeValuesInResponse: true,
+    valueInputOption: 'USER_ENTERED',
+    responseValueRenderOption: 'FORMATTED_VALUE',
+    requestBody: {
+      values: [
+        [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.visit_date, v.temperature, v.weight, v.height, v.diagnosis, v.scheduled_control_date, v.status, v.total_charge FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id WHERE ${filter}", ${sheetName}!A1:${lastColumn}, Patient!A1:K, Doctor!A1:P)`]
+      ],
+    }
   })
 
-  return { headerCols, dataRows };
+  const dataRow = queryData.data.updatedData ? queryData.data.updatedData.values ? queryData.data.updatedData.values : [] : [];
+  dataRow.shift();
+
+  const dataRows = dataRow!.map(row => {
+    const processedRow: any = {};
+    tableEntity!.forEach((key, index) => {
+      processedRow[key] = row[index];
+    });
+    return processedRow;
+  })
+
+  return dataRows;
 }
 
 export const initListOptions = async (props: InitListOptionsProps) => {
@@ -220,12 +242,12 @@ export const initListOptions = async (props: InitListOptionsProps) => {
   const readData = await googleSheetsInstance.spreadsheets.values.batchGet({
     spreadsheetId,
     ranges: recordColumn ? [
-      `${sheetName}!A3:A`,
-      `${sheetName}!${nameColumn}3:${nameColumn}`,
-      `${sheetName}!${recordColumn}3:${recordColumn}`
+      `${sheetName}!A2:A`,
+      `${sheetName}!${nameColumn}2:${nameColumn}`,
+      `${sheetName}!${recordColumn}2:${recordColumn}`
     ] : [
-      `${sheetName}!A3:A`,
-      `${sheetName}!${nameColumn}3:${nameColumn}`
+      `${sheetName}!A2:A`,
+      `${sheetName}!${nameColumn}2:${nameColumn}`
     ]
   })
 

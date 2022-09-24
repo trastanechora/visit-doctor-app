@@ -1,33 +1,36 @@
 import { initList, initFilter, initSingle } from './init';
-import { MEDICINE_LAST_COLUMN } from '../constants/medicine'
+import { SHEET_NAME, LAST_COLUMN, TABLE_ENTITY } from '../constants/medicine'
 
 export const getAllMedicine = async (offset: number, limit: number) => {
-  const { headerCols, dataRows } = await initList({
-    sheetName: 'Medicine',
-    lastColumn: MEDICINE_LAST_COLUMN,
+  const dataRows = await initList({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     offset,
     limit
   });
 
-  return { headerCols, dataRows };
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, offset, limit, data: dataRows };
 }
 
 export const getMedicineByFilter = async (filter: string) => {
-  const { headerCols, dataRows } = await initFilter({
-    sheetName: 'Medicine',
-    lastColumn: MEDICINE_LAST_COLUMN,
+  const dataRows = await initFilter({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     filter,
   });
 
-  return { headerCols, dataRows };
+  return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, filter, data: dataRows };
 }
 
 export const getMedicineById = async (id: string) => {
-  const { ...response } = await initSingle({
-    sheetName: 'Medicine',
-    lastColumn: MEDICINE_LAST_COLUMN,
+  const response = await initSingle({
+    sheetName: SHEET_NAME,
+    tableEntity: TABLE_ENTITY,
+    lastColumn: LAST_COLUMN,
     id,
   });
 
-  return { ...response };
+  return { table_name: SHEET_NAME, data: response };
 }

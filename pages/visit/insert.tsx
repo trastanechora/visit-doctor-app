@@ -32,27 +32,16 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
   };
 
   const handleChangePatientAndRecord = (newValue: { id: string; text: string; record_number: string; } | null) => {
-    console.warn('newValue', newValue)
     if (newValue !== null) {
       setFormState({ ...formState, patientId: newValue.id, recordNumber: newValue.record_number });
       fetch(`/api/patient?id=${newValue.id}`)
         .then((res) => res.json())
-        .then((data) => {
-          setPatientDetail(data);
+        .then((resObject) => {
+          setPatientDetail(resObject.data);
         })
     } else {
       setPatientDetail(undefined);
     }
-    // if (newValue) {
-    //   setFormState({ ...formState, patientId: newValue });
-    //   fetch(`/api/patient?id=${newValue}`)
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       setPatientDetail(data);
-    //     })
-    // } else {
-    //   setPatientDetail(undefined);
-    // }
   };
 
   const calculateAge = (stringBirthDate: string) => {
@@ -76,15 +65,15 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
     setLoading(true)
     fetch(`/api/patient/list`)
       .then((res) => res.json())
-      .then((data) => {
-        console.warn('list data patient', data.list)
-        setPatientOptions(data.list);
+      .then((resObject) => {
+        console.warn('list data patient', resObject.data)
+        setPatientOptions(resObject.data);
       })
     fetch(`/api/doctor/list`)
       .then((res) => res.json())
-      .then((data) => {
-        console.warn('list data doctor', data.list)
-        setDoctorOptions(data.list);
+      .then((resObject) => {
+        console.warn('list data doctor', resObject.data)
+        setDoctorOptions(resObject.data);
       })
   }, []);
 

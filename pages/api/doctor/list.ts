@@ -10,7 +10,7 @@ const handler = async (
   res: NextApiResponse<ResponseData>
 ) => {
   const processedResult = await getDoctorOptions()
-  res.status(200).json({ list: processedResult })
+  res.status(200).json(processedResult)
   return;
 }
 

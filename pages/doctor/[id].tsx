@@ -19,9 +19,9 @@ const DoctorDetailPage: NextPageWithCustomProps = () => {
       setLoading(true)
       fetch(`/api/doctor?id=${id}`)
         .then((res) => res.json())
-        .then((data) => {
+        .then((responseObject) => {
           setLoading(false)
-          setDetail(data);
+          setDetail(responseObject.data);
         })
     }
   }, [id]);
@@ -75,7 +75,7 @@ const DoctorDetailPage: NextPageWithCustomProps = () => {
               NIP:
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {detail.idNumber}
+              {detail.id_number}
             </Typography>
           </Box>
           <Box sx={{ width: '33%' }}>
@@ -91,7 +91,7 @@ const DoctorDetailPage: NextPageWithCustomProps = () => {
               Buka Praktik Sejak:
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {detail.serviceStartDate}
+              {detail.service_start_date}
             </Typography>
           </Box>
         </Box>
@@ -118,7 +118,7 @@ const DoctorDetailPage: NextPageWithCustomProps = () => {
               Tanggal Lahir:
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {detail.dateOfBirth}
+              {detail.date_of_birth}
             </Typography>
           </Box>
         </Box>

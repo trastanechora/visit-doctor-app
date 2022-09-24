@@ -24,18 +24,18 @@ const handler = async (
 
   if (id) {
     const processedResult = await getMedicineById(id)
-    res.status(200).json({ ...processedResult })
+    res.status(200).json(processedResult)
     return;
   }
 
   if (filter) {
     const processedResult = await getMedicineByFilter(filter)
-    res.status(200).json({ ...processedResult })
+    res.status(200).json(processedResult)
     return;
   }
 
   const processedResult = await getAllMedicine(Number(offset), Number(limit))
-  res.status(200).json({ ...processedResult })
+  res.status(200).json(processedResult)
   return;
 }
 

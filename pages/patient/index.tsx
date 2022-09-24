@@ -6,14 +6,12 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Container, Box, TextField, Select, MenuItem, InputLabel, FormControl, Button } from '@mui/material';
 
 import styles from '../../styles/Patient.module.css'
-import { genderList, maritalStatusList, initialFilterState } from '../../constants/patient'
+import { TABLE_HEADER, FILTER_OBJECT, genderList, maritalStatusList, initialFilterState } from '../../constants/patient'
 
 import type { NextPageWithCustomProps } from '../../types/custom'
 
 const PatientPage: NextPageWithCustomProps = () => {
-  const [header, setHeader] = useState<any[]>([])
   const [data, setData] = useState<any[]>([])
-  const [filterOptions, setFilterOptions] = useState<any[]>([])
   const [expanded, setExpanded] = useState<string>('')
   const [isLoading, setLoading] = useState<boolean>(false)
   const [values, setValues] = useState(initialFilterState);
@@ -24,14 +22,8 @@ const PatientPage: NextPageWithCustomProps = () => {
     setLoading(true)
     fetch('/api/patient')
       .then((res) => res.json())
-      .then((data) => {
-        const filteredHeader = data.headerCols.filter((headerObject: any) => !headerObject.isHidden)
-        const processedHeader = filteredHeader.map((headerObject: any) => headerObject.headerObject)
-        const processedFilterOptions = filteredHeader.filter((headerObject: any) => headerObject.filterObject.enabled)
-
-        setHeader(processedHeader)
-        setData(data.dataRows)
-        setFilterOptions(processedFilterOptions)
+      .then((responseObject) => {
+        setData(responseObject.data)
         setLoading(false)
       })
   }, [])
@@ -68,13 +60,8 @@ const PatientPage: NextPageWithCustomProps = () => {
 
     fetch(`/api/patient?filter=${joinedFilter}`)
       .then((res) => res.json())
-      .then((data) => {
-        const filteredHeader = data.headerCols.filter((headerObject: any) => !headerObject.isHidden)
-        const processedHeader = filteredHeader.map((headerObject: any) => headerObject.headerObject)
-        const processedFilterOptions = filteredHeader.filter((headerObject: any) => headerObject.filterObject.enabled)
-        setHeader(processedHeader)
-        setData(data.dataRows)
-        setFilterOptions(processedFilterOptions)
+      .then((responseObject) => {
+        setData(responseObject.data)
         setLoading(false)
       })
   }
@@ -130,7 +117,7 @@ const PatientPage: NextPageWithCustomProps = () => {
                         onChange={handleFilterChange('searchType')}
                         fullWidth
                       >
-                        {filterOptions.map((option, index) => (<MenuItem key={index} value={option.filterObject.column}>{option.filterObject.text}</MenuItem>))}
+                        {FILTER_OBJECT.map((option, index) => (<MenuItem key={index} value={option.column}>{option.text}</MenuItem>))}
                       </Select>
                     </FormControl>
                   </Box>
@@ -181,7 +168,7 @@ const PatientPage: NextPageWithCustomProps = () => {
         <div style={{ height: 500, width: '100%' }}>
           <DataGrid
             rows={data}
-            columns={header}
+            columns={TABLE_HEADER}
             pageSize={5}
             rowsPerPageOptions={[5]}
             disableSelectionOnClick

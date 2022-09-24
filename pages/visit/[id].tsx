@@ -22,10 +22,9 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
       setLoading(true)
       fetch(`/api/visit?id=${id}`)
         .then((res) => res.json())
-        .then((data) => {
+        .then((responseObject) => {
+          setDetail(responseObject.data);
           setLoading(false)
-          console.warn('visit data', data)
-          setDetail(data);
         })
     }
   }, [id]);
