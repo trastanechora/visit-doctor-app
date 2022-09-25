@@ -1,7 +1,10 @@
 import { SessionProvider } from "next-auth/react"
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Layout from '../components/layout'
 import { AuthProvider } from '../context/auth'
 import { NotificationProvider } from '../context/notification'
+import 'dayjs/locale/id';
 
 import type { NextPageWithCustomProps } from '../types/custom'
 import type { AppProps } from 'next/app'
@@ -14,19 +17,21 @@ type AppPropsWithCustomProps = AppProps & {
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWithCustomProps) {
   return (
-    <SessionProvider session={session} refetchInterval={30 * 60} refetchOnWindowFocus={false}>
-      {Component.isRequireAuth ? (
-        <AuthProvider>
-          <Layout>
-            <NotificationProvider>
-              <Component {...pageProps} />
-            </NotificationProvider>
-          </Layout>
-        </AuthProvider>
-      ) : (
-        <Component {...pageProps} />
-      )}
-    </SessionProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="id">
+      <SessionProvider session={session} refetchInterval={30 * 60} refetchOnWindowFocus={false}>
+        {Component.isRequireAuth ? (
+          <AuthProvider>
+            <Layout>
+              <NotificationProvider>
+                <Component {...pageProps} />
+              </NotificationProvider>
+            </Layout>
+          </AuthProvider>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </SessionProvider>
+    </LocalizationProvider>
   )
 }
 

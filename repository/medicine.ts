@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { initList, initFilter, initSingle, initListOptions } from './init';
 import { createItem } from './create';
 
@@ -48,8 +49,8 @@ export const getMedicineOptions = async () => {
 }
 
 export const createMedicine = async (body: any) => {
-  console.log('createMedicine body', body)
-  const dataArray = [body.name, body.code, body.description, body.price, body.price, body.stock, '2022-08-27', '2022-08-27', '-', '-']
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  const dataArray = [body.name, body.code, body.description, body.price, body.price, body.stock, currentDate, currentDate, body.currentUser, '-']
   const response = await createItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,

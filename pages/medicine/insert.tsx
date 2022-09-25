@@ -4,14 +4,16 @@ import { useRouter } from 'next/router'
 import { NumericFormat } from 'react-number-format';
 import { Typography, Box, Divider, Container, TextField, FormControl, Button } from '@mui/material';
 
-import { useAuthContext } from '../../context/notification'
-import styles from '../../styles/Visit.module.css'
+import { useNotificationContext } from '../../context/notification'
+import { useAuthContext } from '../../context/auth'
+import styles from '../../styles/Medicine.module.css'
 
 import type { ChangeEvent } from 'react'
 import type { NextPageWithCustomProps } from '../../types/custom'
 
-const InsertVisitPage: NextPageWithCustomProps = () => {
-  const [_, dispatch] = useAuthContext()
+const InsertMedicinePage: NextPageWithCustomProps = () => {
+  const [_, dispatch] = useNotificationContext()
+  const [authState] = useAuthContext()
   const router = useRouter()
   const [isLoading, setLoading] = useState<boolean>(false)
   const formRef = useRef({
@@ -19,7 +21,8 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
     code: '',
     description: '',
     stock: '',
-    price: ''
+    price: '',
+    currentUser: authState.user.id
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +63,7 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Insert New Medicine | Visit Doctor App</title>
+        <title>Insert New Medicine | Medicine Doctor App</title>
         <meta name="description" content="App for doctor's archive management" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -160,5 +163,5 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
   )
 }
 
-InsertVisitPage.isRequireAuth = true;
-export default InsertVisitPage;
+InsertMedicinePage.isRequireAuth = true;
+export default InsertMedicinePage;

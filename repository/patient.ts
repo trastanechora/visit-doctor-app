@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import { initList, initFilter, initSingle, initListOptions } from './init';
+import { createItem } from './create'
 import { SHEET_NAME, LAST_COLUMN, TABLE_ENTITY } from '../constants/patient'
 
 export const getAllPatient = async (offset: number, limit: number) => {
@@ -40,6 +42,18 @@ export const getPatientOptions = async () => {
     sheetName: SHEET_NAME,
     nameColumn: 'C',
     recordColumn: 'B'
+  });
+
+  return { table_name: SHEET_NAME, data: response };
+}
+
+export const createPatient = async (body: any) => {
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  const dataArray = ['=INDIRECT(ADDRESS(ROW()-1,COLUMN()))+1', body.name, body.idNumber, body.gender, body.dateOfBirth, body.address, body.maritalStatus, body.phone, body.guarantorPhone, currentDate, currentDate, body.currentUser]
+  const response = await createItem({
+    sheetName: SHEET_NAME,
+    lastColumn: LAST_COLUMN,
+    body: dataArray
   });
 
   return { table_name: SHEET_NAME, data: response };

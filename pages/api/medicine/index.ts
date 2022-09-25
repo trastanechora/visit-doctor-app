@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAllMedicine, getMedicineByFilter, getMedicineById, createMedicine } from '../../../repository/medicine'
+import { getAllMedicine, getMedicineByFilter, getMedicineById, createMedicine } from '@/repository/medicine'
 
 type RequestParameters = {
   query: RequestParametersQuery
@@ -26,7 +26,7 @@ const handler = async (
   if (req.method === 'POST') {
     const parsedBody = JSON.parse(body)
     const processedResult = await createMedicine(parsedBody)
-    res.status(200).json(parsedBody)
+    res.status(200).json(processedResult)
   }
 
   if (req.method === 'GET') {

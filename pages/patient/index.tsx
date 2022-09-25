@@ -5,10 +5,10 @@ import { useRouter } from 'next/router'
 import { DataGrid } from '@mui/x-data-grid';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Container, Box, TextField, Select, MenuItem, InputLabel, FormControl, Button } from '@mui/material';
 
-import styles from '../../styles/Patient.module.css'
-import { TABLE_HEADER, FILTER_OBJECT, genderList, maritalStatusList, initialFilterState } from '../../constants/patient'
+import styles from '@/styles/Patient.module.css'
+import { TABLE_HEADER, FILTER_OBJECT, genderList, maritalStatusList, initialFilterState } from '@/constants/patient'
 
-import type { NextPageWithCustomProps } from '../../types/custom'
+import type { NextPageWithCustomProps } from '@/types/custom'
 
 const PatientPage: NextPageWithCustomProps = () => {
   const [data, setData] = useState<any[]>([])
@@ -70,8 +70,6 @@ const PatientPage: NextPageWithCustomProps = () => {
     router.push(`/patient/${event.row.id}`);
   }
 
-  // if (isLoading) return <p>Loading...</p>
-
   return (
     <div className={styles.container}>
       <Head>
@@ -81,9 +79,16 @@ const PatientPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          List Pasien
-        </Typography>
+        <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
+          <Box sx={{ width: '70%', paddingRight: 1 }}>
+            <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+              List Pasien
+            </Typography>
+          </Box>
+          <Box sx={{ width: '30%', display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
+            <Button variant="contained" onClick={() => router.push('/patient/insert')} disabled={isLoading} sx={{ textTransform: 'none' }}>Tambahkan Pasien</Button>
+          </Box>
+        </Container>
         <div className={styles.filterContainer}>
           <Accordion expanded={expanded === 'filter'} onChange={() => handleChange('filter')} disabled={isLoading}>
             <AccordionSummary
@@ -169,8 +174,8 @@ const PatientPage: NextPageWithCustomProps = () => {
           <DataGrid
             rows={data}
             columns={TABLE_HEADER}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10, 20, 50]}
             disableSelectionOnClick
             disableColumnMenu
             onRowClick={(event) => handleOnRowClick(event)}

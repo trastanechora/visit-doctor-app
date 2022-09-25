@@ -62,4 +62,4 @@ export const useNotificationDispatch = (): Dispatch<NotificationAction> => {
 };
 
 type FnUseContext = () => [NotificationState, Dispatch<NotificationAction>];
-export const useAuthContext: FnUseContext = () => [useNotificationState(), useNotificationDispatch()];
+export const useNotificationContext: FnUseContext = () => [useNotificationState(), useNotificationDispatch()];
