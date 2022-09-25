@@ -1,5 +1,5 @@
 export const SHEET_NAME = 'Doctor'
-export const LAST_COLUMN = 'P'
+export const LAST_COLUMN = 'R'
 
 export const genderList = [
   {
@@ -55,4 +55,4 @@ export const FILTER_OBJECT = [
   { "enabled": true, "text": "Informasi", "value": "info", "column": "I" }
 ];
 
-export const TABLE_ENTITY = ['id', 'name', 'email', 'phone', 'gender', 'id_number', 'date_of_birth', 'address', 'info', 'photo', 'status', 'paraf', 'service_start_date', 'createdDate', 'updated_date', 'updatedBy'];
+export const TABLE_ENTITY = ['id', 'name', 'email', 'phone', 'gender', 'id_number', 'date_of_birth', 'address', 'info', 'doctor_schedule', 'photo', 'status', 'license_number', 'paraf', 'service_start_date', 'createdDate', 'updated_date', 'updatedBy'];

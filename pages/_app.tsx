@@ -1,6 +1,7 @@
 import { SessionProvider } from "next-auth/react"
 import Layout from '../components/layout'
 import { AuthProvider } from '../context/auth'
+import { NotificationProvider } from '../context/notification'
 
 import type { NextPageWithCustomProps } from '../types/custom'
 import type { AppProps } from 'next/app'
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWith
       {Component.isRequireAuth ? (
         <AuthProvider>
           <Layout>
-            <Component {...pageProps} />
+            <NotificationProvider>
+              <Component {...pageProps} />
+            </NotificationProvider>
           </Layout>
         </AuthProvider>
       ) : (

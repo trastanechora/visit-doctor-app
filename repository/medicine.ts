@@ -1,4 +1,6 @@
-import { initList, initFilter, initSingle } from './init';
+import { initList, initFilter, initSingle, initListOptions } from './init';
+import { createItem } from './create';
+
 import { SHEET_NAME, LAST_COLUMN, TABLE_ENTITY } from '../constants/medicine'
 
 export const getAllMedicine = async (offset: number, limit: number) => {
@@ -30,6 +32,28 @@ export const getMedicineById = async (id: string) => {
     tableEntity: TABLE_ENTITY,
     lastColumn: LAST_COLUMN,
     id,
+  });
+
+  return { table_name: SHEET_NAME, data: response };
+}
+
+export const getMedicineOptions = async () => {
+  const response = await initListOptions({
+    sheetName: SHEET_NAME,
+    nameColumn: 'B',
+    stockColumn: 'G'
+  });
+
+  return { table_name: SHEET_NAME, data: response };
+}
+
+export const createMedicine = async (body: any) => {
+  console.log('createMedicine body', body)
+  const dataArray = [body.name, body.code, body.description, body.price, body.price, body.stock, '2022-08-27', '2022-08-27', '-', '-']
+  const response = await createItem({
+    sheetName: SHEET_NAME,
+    lastColumn: LAST_COLUMN,
+    body: dataArray
   });
 
   return { table_name: SHEET_NAME, data: response };

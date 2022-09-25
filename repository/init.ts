@@ -40,6 +40,7 @@ interface InitListOptionsProps {
   sheetName: string;
   nameColumn: string;
   recordColumn?: string;
+  stockColumn?: string;
 }
 
 const auth = new google.auth.GoogleAuth({
@@ -233,22 +234,36 @@ export const initListOptions = async (props: InitListOptionsProps) => {
   const {
     sheetName,
     nameColumn,
-    recordColumn
+    recordColumn,
+    stockColumn
   } = props
 
   const authClientObject = await auth.getClient();
   const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
 
-  const readData = await googleSheetsInstance.spreadsheets.values.batchGet({
-    spreadsheetId,
-    ranges: recordColumn ? [
+  let ranges = [];
+  if (recordColumn) {
+    ranges = [
       `${sheetName}!A2:A`,
       `${sheetName}!${nameColumn}2:${nameColumn}`,
       `${sheetName}!${recordColumn}2:${recordColumn}`
-    ] : [
+    ]
+  } else if (stockColumn) {
+    ranges = [
+      `${sheetName}!A2:A`,
+      `${sheetName}!${nameColumn}2:${nameColumn}`,
+      `${sheetName}!${stockColumn}2:${stockColumn}`
+    ]
+  } else {
+    ranges = [
       `${sheetName}!A2:A`,
       `${sheetName}!${nameColumn}2:${nameColumn}`
     ]
+  }
+
+  const readData = await googleSheetsInstance.spreadsheets.values.batchGet({
+    spreadsheetId,
+    ranges
   })
 
   const rawIdStack = readData.data.valueRanges ? readData.data.valueRanges[0].values : [];
@@ -271,7 +286,14 @@ export const initListOptions = async (props: InitListOptionsProps) => {
       return rawRm;
     })
     return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '', record_number: recordStack ? recordStack[index] : '' }));
+  } else if (stockColumn) {
+    const rawStockStack = readData.data.valueRanges ? readData.data.valueRanges[2].values : [];
+    const stockStack = rawStockStack?.map((rm) => {
+      const [rawRm] = rm;
+      return rawRm;
+    })
+    return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '', stock: stockStack ? stockStack[index] : '' }));
+  } else {
+    return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '' }));
   }
-
-  return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '' }));
 }
