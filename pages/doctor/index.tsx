@@ -177,8 +177,8 @@ const DoctorPage: NextPageWithCustomProps = () => {
           <DataGrid
             rows={data}
             columns={TABLE_HEADER}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10, 20, 50]}
             disableSelectionOnClick
             disableColumnMenu
             onRowClick={(event) => handleOnRowClick(event)}
