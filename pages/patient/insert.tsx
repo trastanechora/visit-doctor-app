@@ -45,7 +45,7 @@ const InsertPatientPage: NextPageWithCustomProps = () => {
       .then((res) => res.json())
       .then((responseObject) => {
         console.warn('responseObject', responseObject)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan obat ${values.name}` } })
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan pasien ${values.name}` } })
         router.replace('/patient')
         setLoading(false)
       })
@@ -57,7 +57,7 @@ const InsertPatientPage: NextPageWithCustomProps = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Insert New Patient | Patient Doctor App</title>
+        <title>Insert New Patient | Visit Doctor App</title>
         <meta name="description" content="App for doctor's archive management" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

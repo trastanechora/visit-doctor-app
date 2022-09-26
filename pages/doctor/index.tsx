@@ -82,9 +82,16 @@ const DoctorPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          List Dokter
-        </Typography>
+        <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
+          <Box sx={{ width: '70%', paddingRight: 1 }}>
+            <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+              List Dokter
+            </Typography>
+          </Box>
+          <Box sx={{ width: '30%', display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
+            <Button variant="contained" onClick={() => router.push('/doctor/insert')} disabled={isLoading} sx={{ textTransform: 'none' }}>Tambahkan Dokter</Button>
+          </Box>
+        </Container>
         <div className={styles.filterContainer}>
           <Accordion expanded={expanded === 'filter'} onChange={() => handleChange('filter')} disabled={isLoading}>
             <AccordionSummary

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAllDoctor, getDoctorByFilter, getDoctorById, getDoctorByEmail } from '../../../repository/doctor'
+import { getAllDoctor, getDoctorByFilter, getDoctorById, getDoctorByEmail, createDoctor } from '@/repository/doctor'
 
 type RequestParameters = {
   query: RequestParametersQuery
@@ -24,6 +24,12 @@ const handler = async (
   const { query: { id, email, offset = 1, limit = 10, filter = '' } }: RequestParameters = req;
   const { body } = req;
 
+  if (req.method === 'POST') {
+    const parsedBody = JSON.parse(body)
+    const processedResult = await createDoctor(parsedBody)
+    res.status(200).json(processedResult)
+  }
+
   if (req.method === 'GET') {
     if (email) {
       const processedResult = await getDoctorByEmail(email)
@@ -46,10 +52,6 @@ const handler = async (
     const processedResult = await getAllDoctor(Number(offset), Number(limit))
     res.status(200).json(processedResult)
     return;
-  }
-
-  if (req.method === 'POST') {
-    res.status(200).json(body)
   }
 }
 

@@ -1,5 +1,7 @@
+import dayjs from 'dayjs';
 import { initList, initFilter, initSingle, initListOptions } from './init';
 import { SHEET_NAME, LAST_COLUMN, TABLE_ENTITY } from '../constants/doctor'
+import { createItem } from './create';
 
 export const getAllDoctor = async (offset: number, limit: number) => {
   const dataRows = await initList({
@@ -50,6 +52,18 @@ export const getDoctorOptions = async () => {
   const response = await initListOptions({
     sheetName: SHEET_NAME,
     nameColumn: 'B'
+  });
+
+  return { table_name: SHEET_NAME, data: response };
+}
+
+export const createDoctor = async (body: any) => {
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  const dataArray = [body.name, body.email, body.phone, body.gender, body.idNumber, body.dateOfBirth, body.address, body.info, JSON.stringify(body.doctorSchedule), body.photo, body.status, body.licenseNumber, body.paraf, body.serviceStartDate, currentDate, currentDate, body.currentUser]
+  const response = await createItem({
+    sheetName: SHEET_NAME,
+    lastColumn: LAST_COLUMN,
+    body: dataArray
   });
 
   return { table_name: SHEET_NAME, data: response };
