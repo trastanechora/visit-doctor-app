@@ -30,9 +30,9 @@ const handler = async (
       if (keys.length === 0) {
         return '/unauthorized'
       } else {
-        setCookie('user_id', processedResult.id, { req, res });
-        setCookie('name', processedResult.name, { req, res });
-        setCookie('email', processedResult.email, { req, res });
+        setCookie('user_id', processedResult.data.id, { req, res });
+        setCookie('name', processedResult.data.name, { req, res });
+        setCookie('email', processedResult.data.email, { req, res });
         setCookie('image', user.image, { req, res });
         return true
       }

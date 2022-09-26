@@ -19,17 +19,17 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWith
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="id">
       <SessionProvider session={session} refetchInterval={30 * 60} refetchOnWindowFocus={false}>
-        {Component.isRequireAuth ? (
-          <AuthProvider>
-            <Layout>
-              <NotificationProvider>
+        <NotificationProvider>
+          {Component.isRequireAuth ? (
+            <AuthProvider>
+              <Layout>
                 <Component {...pageProps} />
-              </NotificationProvider>
-            </Layout>
-          </AuthProvider>
-        ) : (
-          <Component {...pageProps} />
-        )}
+              </Layout>
+            </AuthProvider>
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </NotificationProvider>
       </SessionProvider>
     </LocalizationProvider>
   )

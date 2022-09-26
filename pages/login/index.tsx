@@ -1,14 +1,25 @@
 import Head from 'next/head'
 import Button from '@mui/material/Button';
 import { signIn } from "next-auth/react";
+import { getCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
+import { useNotificationContext } from '@/context/notification'
 
-import styles from '../../styles/Home.module.css'
+import styles from '@/styles/Home.module.css'
 
 import type { NextPage } from 'next'
 
 const LoginPage: NextPage = () => {
+  const router = useRouter()
+  const [_, dispatch] = useNotificationContext()
   const doLogin = () => {
-    signIn('google', { callbackUrl: '/doctor' })
+    const userId = getCookie('user_id');
+    if (!userId) {
+      signIn('google', { callbackUrl: '/doctor' })
+      return;
+    }
+    dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Sesi login Anda masih tersimpan, logout jika ingin menggunakan akun lain.` } })
+    router.push('/doctor');
   }
   return (
     <div className={styles.container}>

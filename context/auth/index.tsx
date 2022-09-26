@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer, Dispatch, useEffect } from 'reac
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import { reducer } from './reducer'
-import { getCookie } from 'cookies-next';
+import { getCookie, deleteCookie } from 'cookies-next';
 
 import type { FC } from 'react';
 import type { Props, AuthState, AuthAction, UserObject } from './types'
@@ -29,6 +29,10 @@ export const AuthProvider: FC<Props> = (props) => {
 
   console.warn('session from context', session)
   if (!loading && !session) {
+    deleteCookie('user_id')
+    deleteCookie('name')
+    deleteCookie('email')
+    deleteCookie('image')
     router.push('/login');
   }
 
