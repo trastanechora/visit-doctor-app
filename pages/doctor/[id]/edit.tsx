@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider, Container, TextField, FormControl, Button, InputLabel, Select, MenuItem, FormLabel, FormGroup, FormControlLabel, Checkbox, FormHelperText } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import dayjs from 'dayjs';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import { useNotificationContext } from '@/context/notification'
 import { useAuthContext } from '@/context/auth'
@@ -190,9 +191,12 @@ const InsertDoctorPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Ubah Data Dokter
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Ubah Data Dokter
+          </Typography>
+        </Box>
 
         <Container maxWidth={false} disableGutters sx={{ width: '100%', marginTop: 2 }}>
           <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 3 }}>

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NumericFormat } from 'react-number-format';
 import { Typography, Box, Divider, Container, TextField, FormControl, Button } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import { useNotificationContext } from '../../context/notification'
 import { useAuthContext } from '../../context/auth'
@@ -72,9 +73,12 @@ const InsertMedicinePage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Tambahkan Obat
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Tambahkan Obat
+          </Typography>
+        </Box>
 
         <Container maxWidth={false} disableGutters sx={{ width: '100%', marginTop: 2 }}>
           <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 3 }}>

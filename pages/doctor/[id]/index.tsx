@@ -2,6 +2,8 @@ import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Button from '@mui/material/Button';
 
 import styles from '@/styles/Doctor.module.css'
 
@@ -37,9 +39,12 @@ const DoctorDetailPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Detail Dokter
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Detail Dokter
+          </Typography>
+        </Box>
 
         <Box sx={{ width: '100%', marginBottom: 2 }}>
           <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>

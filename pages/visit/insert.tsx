@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider, Container, TextField, FormControl, Button, Autocomplete } from '@mui/material';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import styles from '../../styles/Visit.module.css'
 import { icdtenList } from '../../datasets/icd10'
@@ -11,13 +12,11 @@ import type { NextPageWithCustomProps } from '../../types/custom'
 
 const InsertVisitPage: NextPageWithCustomProps = () => {
   const router = useRouter()
-  const [doctorState] = useAuthContext();
   const [isLoading, setLoading] = useState<boolean>(false)
   const [isEnglish, setIsEnglish] = useState<boolean>(false)
   const [detail, setDetail] = useState<any>({})
   const [patientDetail, setPatientDetail] = useState<any>(null)
   const [patientOptions, setPatientOptions] = useState<any[]>([])
-  const [doctorDetail, setDoctorDetail] = useState<any>({})
   const [doctorOptions, setDoctorOptions] = useState<any[]>([])
   const [formState, setFormState] = useState({
     patientId: '',
@@ -100,9 +99,12 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Tambahkan Rekam Medis
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Tambahkan Rekam Medis
+          </Typography>
+        </Box>
 
         <Container maxWidth={false} disableGutters sx={{ width: '100%', marginTop: 2 }}>
           <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>

@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
-import { Typography, Box, Divider, Button, TextField } from '@mui/material';
-// import Autocomplete from '@mui/material/Autocomplete';
+import { Typography, Box, Divider, Button } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import styles from '../../styles/Visit.module.css'
 
@@ -66,9 +66,12 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Detail Rekam Medis
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Detail Rekam Medis
+          </Typography>
+        </Box>
 
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
           <Box sx={{ width: '50%' }}>
