@@ -85,7 +85,7 @@ const EditPatientPage: NextPageWithCustomProps = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Edit New Patient | Visit Doctor App</title>
+        <title>Edit Patient | Visit Doctor App</title>
         <meta name="description" content="App for doctor's archive management" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

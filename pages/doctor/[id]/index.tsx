@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider } from '@mui/material';
 
-import styles from '../../styles/Doctor.module.css'
+import styles from '@/styles/Doctor.module.css'
 
-import type { NextPageWithCustomProps } from '../../types/custom'
+import type { NextPageWithCustomProps } from '@/types/custom'
 
 const DoctorDetailPage: NextPageWithCustomProps = () => {
   const [isLoading, setLoading] = useState<boolean>(false)

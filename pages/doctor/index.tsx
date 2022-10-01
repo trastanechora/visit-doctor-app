@@ -67,11 +67,15 @@ const DoctorPage: NextPageWithCustomProps = () => {
       })
   }
 
-  const handleOnRowClick = (event: any) => {
-    router.push(`/doctor/${event.row.id}`);
+  const handleTriggerAction = (type: string, rowData: any) => {
+    if (type === 'view') {
+      router.push(`/doctor/${rowData.row.id}`);
+    } else if (type === 'edit') {
+      router.push(`/doctor/${rowData.row.id}/edit`);
+    } else {
+      console.warn('delete', rowData)
+    }
   }
-
-  // if (isLoading) return <p>Loading...</p>
 
   return (
     <div className={styles.container}>
@@ -173,18 +177,17 @@ const DoctorPage: NextPageWithCustomProps = () => {
             </AccordionDetails>
           </Accordion>
         </div>
-        <div style={{ height: 500, width: '100%' }}>
+        <Box style={{ height: 700, width: '100%' }}>
           <DataGrid
             rows={data}
-            columns={TABLE_HEADER}
+            columns={TABLE_HEADER(handleTriggerAction)}
             pageSize={10}
             rowsPerPageOptions={[5, 10, 20, 50]}
             disableSelectionOnClick
             disableColumnMenu
-            onRowClick={(event) => handleOnRowClick(event)}
             loading={isLoading}
           />
-        </div>
+        </Box>
       </main>
     </div>
   )

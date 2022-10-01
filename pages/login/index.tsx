@@ -18,7 +18,7 @@ const LoginPage: NextPage = () => {
       signIn('google', { callbackUrl: '/doctor' })
       return;
     }
-    dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Sesi login Anda masih tersimpan, logout jika ingin menggunakan akun lain.` } })
+    dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Sesi login Anda masih tersimpan, logout jika ingin menggunakan akun lain.`, severity: 'success' } })
     router.push('/doctor');
   }
   return (

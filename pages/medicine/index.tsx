@@ -70,8 +70,6 @@ const MedicinePage: NextPageWithCustomProps = () => {
     }
   }
 
-  // if (isLoading) return <p>Loading...</p>
-
   return (
     <div className={styles.container}>
       <Head>
@@ -140,7 +138,7 @@ const MedicinePage: NextPageWithCustomProps = () => {
             </AccordionDetails>
           </Accordion>
         </div>
-        <div style={{ height: 500, width: '100%' }}>
+        <Box style={{ height: 700, width: '100%' }}>
           <DataGrid
             rows={data}
             columns={TABLE_HEADER(handleTriggerAction)}
@@ -150,7 +148,7 @@ const MedicinePage: NextPageWithCustomProps = () => {
             disableColumnMenu
             loading={isLoading}
           />
-        </div>
+        </Box>
       </main>
     </div>
   )

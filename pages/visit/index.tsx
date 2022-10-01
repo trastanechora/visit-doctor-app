@@ -81,8 +81,6 @@ const VisitPage: NextPageWithCustomProps = () => {
     router.push(`/visit/${event.row.id}`);
   }
 
-  // if (isLoading) return <p>Loading...</p>
-
   return (
     <div className={styles.container}>
       <Head>
@@ -155,7 +153,7 @@ const VisitPage: NextPageWithCustomProps = () => {
             </AccordionDetails>
           </Accordion>
         </div>
-        <div style={{ height: 500, width: '100%' }}>
+        <Box style={{ height: 700, width: '100%' }}>
           <DataGrid
             rows={data}
             columns={TABLE_HEADER}
@@ -166,7 +164,7 @@ const VisitPage: NextPageWithCustomProps = () => {
             onRowClick={(event) => handleOnRowClick(event)}
             loading={isLoading}
           />
-        </div>
+        </Box>
       </main>
     </div>
   )

@@ -176,7 +176,7 @@ const PatientPage: NextPageWithCustomProps = () => {
             </AccordionDetails>
           </Accordion>
         </div>
-        <div style={{ height: 500, width: '100%' }}>
+        <Box style={{ height: 700, width: '100%' }}>
           <DataGrid
             rows={data}
             columns={TABLE_HEADER(handleTriggerAction)}
@@ -186,7 +186,7 @@ const PatientPage: NextPageWithCustomProps = () => {
             disableColumnMenu
             loading={isLoading}
           />
-        </div>
+        </Box>
       </main>
     </div>
   )

@@ -4,8 +4,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-export const SHEET_NAME = 'Patient'
-export const LAST_COLUMN = 'M'
+export const SHEET_NAME = 'Doctor'
+export const LAST_COLUMN = 'R'
 
 export const genderList = [
   {
@@ -18,14 +18,14 @@ export const genderList = [
   }
 ]
 
-export const maritalStatusList = [
+export const statusList = [
   {
-    text: 'Lajang',
-    value: 'single'
+    text: 'Aktif',
+    value: 'active'
   },
   {
-    text: 'Menikah',
-    value: 'married'
+    text: 'Tidak Aktif',
+    value: 'inactive'
   }
 ]
 
@@ -33,21 +33,20 @@ export const initialFilterState = {
   searchString: '',
   searchType: '',
   gender: '',
-  genderType: 'D',
+  genderType: 'E',
   status: '',
-  maritalStatusType: 'G'
+  statusType: 'K'
 }
 
 export const TABLE_HEADER = (callbackFunction: (type: string, dataRow: any) => void) => [
-  { field: "record_number", headerName: "Nomor RM", width: 100, sortable: false },
-  { field: "name", headerName: "Nama Pasien", width: 250, sortable: false },
-  { field: "id_number", headerName: "NIK", width: 200, sortable: false },
+  { field: "name", headerName: "Nama Dokter", width: 300, sortable: false },
+  { field: "status", headerName: "Status", width: 100, sortable: false },
+  { field: "phone", headerName: "Nomor HP", width: 150, sortable: false },
   { field: "gender", headerName: "Jenis Kelamin", width: 150, sortable: false },
   { field: "date_of_birth", headerName: "Tanggal Lahir", width: 150, sortable: false },
-  { field: "address", headerName: "Alamat", width: 300, sortable: false },
-  { field: "marital_status", headerName: "Status Pernikahan", width: 150, sortable: false },
-  { field: "phone", headerName: "Nomor HP", width: 200, sortable: false },
-  { field: "guarantor_phone", headerName: "Nomor HP Penjamin", width: 200, sortable: false },
+  { field: "address", headerName: "Alamat", width: 200, sortable: false },
+  { field: "service_start_date", headerName: "Buka Praktek Sejak", width: 150, sortable: false },
+  { field: "email", headerName: "Alamat Surel", width: 200, sortable: false },
   {
     field: 'action',
     headerName: 'Tindakan',
@@ -63,14 +62,12 @@ export const TABLE_HEADER = (callbackFunction: (type: string, dataRow: any) => v
 ];
 
 export const FILTER_OBJECT = [
-  { text: "Nomor RM", value: "record_number", column: "B" },
-  { text: "Nama Pasien", value: "name", column: "C" },
-  { text: "NIK", value: "id_number", column: "D" },
-  { text: "Jenis Kelamin", value: "gender", column: "E" },
-  { text: "Alamat", value: "address", column: "G" },
-  { text: "Status Pernikahan", value: "marital_status", column: "H" },
-  { text: "Nomor HP", value: "phone", column: "I" },
-  { text: "Nomor HP Penjamin", value: "guarantor_phone", column: "J" }
+  { text: "Nama Dokter", value: "name", column: "B" },
+  { text: "Alamat Surel", value: "email", column: "C" },
+  { text: "Nomor HP", value: "phone", column: "D" },
+  { text: "NIP", value: "id_number", column: "F" },
+  { text: "Alamat", value: "address", column: "H" },
+  { text: "Informasi", value: "info", column: "I" }
 ];
 
-export const TABLE_ENTITY = ['id', 'record_number', 'name', 'id_number', 'gender', 'date_of_birth', 'address', 'marital_status', 'phone', 'guarantor_phone', 'created_date', 'updated_date', 'updated_by'];
+export const TABLE_ENTITY = ['id', 'name', 'email', 'phone', 'gender', 'id_number', 'date_of_birth', 'address', 'info', 'doctor_schedule', 'photo', 'status', 'license_number', 'paraf', 'service_start_date', 'createdDate', 'updated_date', 'updatedBy'];
