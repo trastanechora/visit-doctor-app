@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { initList, initFilter, initSingle, initListOptions } from './init';
 import { createItem } from './create';
+import { updateItem } from './update';
 
 import { SHEET_NAME, LAST_COLUMN, TABLE_ENTITY } from '../constants/medicine'
 
@@ -52,6 +53,18 @@ export const createMedicine = async (body: any) => {
   const currentDate = dayjs().format('YYYY-MM-DD');
   const dataArray = [body.name, body.code, body.description, body.price, body.price, body.stock, currentDate, currentDate, body.currentUser, '-']
   const response = await createItem({
+    sheetName: SHEET_NAME,
+    lastColumn: LAST_COLUMN,
+    body: dataArray
+  });
+
+  return { table_name: SHEET_NAME, data: response };
+}
+
+export const updateMedicine = async (body: any) => {
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  const dataArray = [body.id, body.name, body.code, body.description, body.price, body.price, body.stock, null, currentDate, body.currentUser, '-']
+  const response = await updateItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,
     body: dataArray

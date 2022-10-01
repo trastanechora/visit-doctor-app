@@ -20,37 +20,13 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) => {
-  const { query: { id, offset = 1, limit = 10, filter = '' } }: RequestParameters = req;
+  const { query: { id } }: RequestParameters = req;
   const { body } = req;
-
-  if (req.method === 'POST') {
-    const parsedBody = JSON.parse(body)
-    const processedResult = await createMedicine(parsedBody)
-    res.status(200).json(processedResult)
-  }
 
   if (req.method === 'PUT' && id) {
     const parsedBody = JSON.parse(body)
     const processedResult = await updateMedicine({ ...parsedBody, id })
     res.status(200).json(processedResult)
-  }
-
-  if (req.method === 'GET') {
-    if (id) {
-      const processedResult = await getMedicineById(id)
-      res.status(200).json(processedResult)
-      return;
-    }
-
-    if (filter) {
-      const processedResult = await getMedicineByFilter(filter)
-      res.status(200).json(processedResult)
-      return;
-    }
-
-    const processedResult = await getAllMedicine(Number(offset), Number(limit))
-    res.status(200).json(processedResult)
-    return;
   }
 }
 

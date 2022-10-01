@@ -2,10 +2,12 @@ import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Button from '@mui/material/Button';
 
-import styles from '../../styles/Medicine.module.css'
+import styles from '@/styles/Medicine.module.css'
 
-import type { NextPageWithCustomProps } from '../../types/custom'
+import type { NextPageWithCustomProps } from '@/types/custom'
 
 const MedicineDetailPage: NextPageWithCustomProps = () => {
   const [isLoading, setLoading] = useState<boolean>(false)
@@ -37,9 +39,12 @@ const MedicineDetailPage: NextPageWithCustomProps = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Detail Obat
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Detail Obat
+          </Typography>
+        </Box>
 
         <Box sx={{ width: '100%', marginBottom: 2 }}>
           <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
@@ -64,7 +69,7 @@ const MedicineDetailPage: NextPageWithCustomProps = () => {
             Info Detail:
           </Typography>
           <Typography sx={{ fontWeight: '500' }} variant="body1" gutterBottom>
-            {detail.info}
+            {detail.active_substance}
           </Typography>
         </Box>
         <Divider sx={{ marginBottom: 3 }} />
