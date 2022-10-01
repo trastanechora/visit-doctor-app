@@ -88,10 +88,13 @@ const EditMedicinePage: NextPageWithCustomProps = () => {
     fetch(`/api/medicine/${id}`, { method: 'PUT', body: JSON.stringify(bodyData) })
       .then((res) => res.json())
       .then((responseObject) => {
-        setLoading(false)
-        console.warn('responseObject', responseObject)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil ubah data obat ${formRef.current.name}` } })
+        console.log('SUCCESS!', responseObject)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil ubah data obat ${formRef.current.name}`, severity: 'success' } })
         router.replace('/medicine')
+        setLoading(false)
+      }).then((err) => {
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal ubah data obat, error: ${err}`, severity: 'error' } })
+        setLoading(false)
       })
   }
 
@@ -108,7 +111,7 @@ const EditMedicinePage: NextPageWithCustomProps = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Insert New Medicine | Medicine Doctor App</title>
+        <title>Edit New Medicine | Medicine Doctor App</title>
         <meta name="description" content="App for doctor's archive management" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

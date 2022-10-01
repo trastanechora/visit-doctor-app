@@ -58,29 +58,3 @@ export const updateItem = async (props: any) => {
 
   return readData;
 }
-
-export const initFindRow = async (props: InitFindRowBProps) => {
-  const {
-    id,
-    sheetName,
-    idColumn = 'A'
-  } = props
-
-  const authClientObject = await auth.getClient();
-  const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
-
-  const queryData = await googleSheetsInstance.spreadsheets.values.update({
-    spreadsheetId,
-    range: `FindRow!${idColumn}1:${idColumn}`,
-    includeValuesInResponse: true,
-    valueInputOption: 'USER_ENTERED',
-    responseValueRenderOption: 'FORMATTED_VALUE',
-    requestBody: {
-      values: [
-        [`=MATCH("${id}", ${sheetName}!A1:A, 0)`]
-      ],
-    }
-  })
-
-  return queryData.data.updatedData?.values ? queryData.data.updatedData?.values[0][0] : '';
-}

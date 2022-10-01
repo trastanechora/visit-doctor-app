@@ -60,7 +60,7 @@ const MedicinePage: NextPageWithCustomProps = () => {
       })
   }
 
-  const handleTriggerEdit = (type: string, rowData: any) => {
+  const handleTriggerAction = (type: string, rowData: any) => {
     if (type === 'view') {
       router.push(`/medicine/${rowData.row.id}`);
     } else if (type === 'edit') {
@@ -143,7 +143,7 @@ const MedicinePage: NextPageWithCustomProps = () => {
         <div style={{ height: 500, width: '100%' }}>
           <DataGrid
             rows={data}
-            columns={TABLE_HEADER(handleTriggerEdit)}
+            columns={TABLE_HEADER(handleTriggerAction)}
             pageSize={10}
             rowsPerPageOptions={[5, 10, 20, 50]}
             disableSelectionOnClick

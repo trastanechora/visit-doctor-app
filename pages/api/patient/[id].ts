@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { updateMedicine } from '@/repository/medicine'
+import { updatePatient } from '@/repository/patient'
 
 type RequestParameters = {
   query: RequestParametersQuery
@@ -25,7 +25,7 @@ const handler = async (
 
   if (req.method === 'PUT' && id) {
     const parsedBody = JSON.parse(body)
-    const processedResult = await updateMedicine({ ...parsedBody, id })
+    const processedResult = await updatePatient({ ...parsedBody, id })
     res.status(200).json(processedResult)
   }
 }

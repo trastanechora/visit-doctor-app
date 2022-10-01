@@ -107,9 +107,12 @@ const InsertDoctorPage: NextPageWithCustomProps = () => {
     fetch('/api/doctor', { method: 'POST', body: JSON.stringify(body) })
       .then((res) => res.json())
       .then((responseObject) => {
-        console.warn('responseObject', responseObject)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan dokter ${values.name}` } })
+        console.log('SUCCESS!', responseObject)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan dokter ${values.name}`, severity: 'success' } })
         router.replace('/doctor')
+        setLoading(false)
+      }).catch((err) => {
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal menambahkan dokter, error: ${err}`, severity: 'error' } })
         setLoading(false)
       })
   }

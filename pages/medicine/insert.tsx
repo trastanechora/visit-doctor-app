@@ -51,10 +51,13 @@ const InsertMedicinePage: NextPageWithCustomProps = () => {
     fetch('/api/medicine', { method: 'POST', body: JSON.stringify(formRef.current) })
       .then((res) => res.json())
       .then((responseObject) => {
-        setLoading(false)
-        console.warn('responseObject', responseObject)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan obat ${formRef.current.name}` } })
+        console.log('SUCCESS!', responseObject)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan obat ${formRef.current.name}`, severity: 'success' } })
         router.replace('/medicine')
+        setLoading(false)
+      }).then((err) => {
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal menambahkan obat, error: ${err}`, severity: 'error' } })
+        setLoading(false)
       })
   }
 

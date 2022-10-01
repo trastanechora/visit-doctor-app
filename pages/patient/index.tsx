@@ -66,8 +66,14 @@ const PatientPage: NextPageWithCustomProps = () => {
       })
   }
 
-  const handleOnRowClick = (event: any) => {
-    router.push(`/patient/${event.row.id}`);
+  const handleTriggerAction = (type: string, rowData: any) => {
+    if (type === 'view') {
+      router.push(`/patient/${rowData.row.id}`);
+    } else if (type === 'edit') {
+      router.push(`/patient/${rowData.row.id}/edit`);
+    } else {
+      console.warn('delete', rowData)
+    }
   }
 
   return (
@@ -173,12 +179,11 @@ const PatientPage: NextPageWithCustomProps = () => {
         <div style={{ height: 500, width: '100%' }}>
           <DataGrid
             rows={data}
-            columns={TABLE_HEADER}
+            columns={TABLE_HEADER(handleTriggerAction)}
             pageSize={10}
             rowsPerPageOptions={[5, 10, 20, 50]}
             disableSelectionOnClick
             disableColumnMenu
-            onRowClick={(event) => handleOnRowClick(event)}
             loading={isLoading}
           />
         </div>

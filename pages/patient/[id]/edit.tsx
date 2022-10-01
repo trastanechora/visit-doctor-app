@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router'
 import { Typography, Box, Divider, Container, TextField, FormControl, Button, InputLabel, Select, MenuItem } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import dayjs from 'dayjs';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import { useNotificationContext } from '@/context/notification'
 import { useAuthContext } from '@/context/auth'
@@ -14,12 +15,13 @@ import styles from '@/styles/Patient.module.css'
 import type { NextPageWithCustomProps } from '@/types/custom'
 import type { Dayjs } from 'dayjs';
 
-const InsertPatientPage: NextPageWithCustomProps = () => {
+const EditPatientPage: NextPageWithCustomProps = () => {
   const [_, dispatch] = useNotificationContext()
   const [authState] = useAuthContext()
   const router = useRouter()
   const [isLoading, setLoading] = useState<boolean>(false)
   const [datePickerValue, setDatePickerValue] = useState<Dayjs | null>(dayjs());
+  const { query: { id } } = router;
 
   const [values, setValues] = useState({
     name: '',
@@ -35,21 +37,45 @@ const InsertPatientPage: NextPageWithCustomProps = () => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
+  useEffect(() => {
+    if (id && authState) {
+      setLoading(true)
+      fetch(`/api/patient?id=${id}`)
+        .then((res) => res.json())
+        .then((responseObject) => {
+          setLoading(false)
+          setValues({
+            name: responseObject.data.name,
+            idNumber: responseObject.data.id_number,
+            gender: responseObject.data.gender,
+            address: responseObject.data.address,
+            maritalStatus: responseObject.data.marital_status,
+            phone: responseObject.data.phone,
+            guarantorPhone: responseObject.data.guarantor_phone,
+            currentUser: authState.user.id
+          });
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, useEffect]);
+
   const handleSubmit = () => {
+    setLoading(true)
     const body = {
       ...values,
       dateOfBirth: datePickerValue?.format('YYYY-MM-DD')
     }
-    setLoading(true)
-    fetch('/api/patient', { method: 'POST', body: JSON.stringify(body) })
+    console.warn('data body', body)
+    fetch(`/api/patient/${id}`, { method: 'PUT', body: JSON.stringify(body) })
       .then((res) => res.json())
       .then((responseObject) => {
-        console.log('SUCCESS!', responseObject)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan pasien ${values.name}`, severity: 'success' } })
+        console.warn('responseObject', responseObject)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil ubah data pasien ${values.name}`, severity: 'success' } })
         router.replace('/patient')
         setLoading(false)
-      }).then((err) => {
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal menambahkan pasien, error: ${err}`, severity: 'error' } })
+      }).catch((err) => {
+        console.warn('error', err)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal ubah data pasien, error: ${err}`, severity: 'error' } })
         setLoading(false)
       })
   }
@@ -59,15 +85,18 @@ const InsertPatientPage: NextPageWithCustomProps = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Insert New Patient | Visit Doctor App</title>
+        <title>Edit New Patient | Visit Doctor App</title>
         <meta name="description" content="App for doctor's archive management" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
-          Tambahkan Pasien
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
+          <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
+            Ubah Data Pasien
+          </Typography>
+        </Box>
 
         <Container maxWidth={false} disableGutters sx={{ width: '100%', marginTop: 2 }}>
           <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 3 }}>
@@ -232,5 +261,5 @@ const InsertPatientPage: NextPageWithCustomProps = () => {
   )
 }
 
-InsertPatientPage.isRequireAuth = true;
-export default InsertPatientPage;
+EditPatientPage.isRequireAuth = true;
+export default EditPatientPage;
