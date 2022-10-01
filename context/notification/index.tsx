@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer, Dispatch } from 'react';
 import { reducer } from './reducer'
 import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 import type { FC } from 'react';
 import type { Props, NotificationState, NotificationAction } from './types'
@@ -8,7 +9,8 @@ import type { Props, NotificationState, NotificationAction } from './types'
 const initialState: NotificationState = {
   isOpen: false,
   message: '',
-  autoHideDuration: 5000,
+  severity: 'success',
+  autoHideDuration: 7000,
 };
 
 const ContextState = createContext<NotificationState | undefined>(undefined);
@@ -34,8 +36,11 @@ export const NotificationProvider: FC<Props> = (props) => {
           open={state.isOpen}
           autoHideDuration={state.autoHideDuration}
           onClose={handleClose}
-          message={state.message}
-        />
+        >
+          <Alert variant="filled" onClose={handleClose} severity={state.severity} sx={{ width: '100%' }}>
+            {state.message}
+          </Alert>
+        </Snackbar>
       </ContextDispatch.Provider>
     </ContextState.Provider>
   )
