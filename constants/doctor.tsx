@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { formatAge, formatStatus, formatGender, formatExperience } from '@/utils/formatter';
 
 export const SHEET_NAME = 'Doctor'
 export const LAST_COLUMN = 'R'
@@ -40,12 +41,12 @@ export const initialFilterState = {
 
 export const TABLE_HEADER = (callbackFunction: (type: string, dataRow: any) => void) => [
   { field: "name", headerName: "Nama Dokter", width: 300, sortable: false },
-  { field: "status", headerName: "Status", width: 100, sortable: false },
+  { field: "status", headerName: "Status", width: 150, sortable: false, renderCell: (params: any) => formatStatus(params.row.status) },
   { field: "phone", headerName: "Nomor HP", width: 150, sortable: false },
-  { field: "gender", headerName: "Jenis Kelamin", width: 150, sortable: false },
-  { field: "date_of_birth", headerName: "Tanggal Lahir", width: 150, sortable: false },
+  { field: "gender", headerName: "Jenis Kelamin", width: 150, sortable: false, renderCell: (params: any) => formatGender(params.row.gender) },
+  { field: "date_of_birth", headerName: "Usia", width: 150, sortable: false, renderCell: (params: any) => formatAge(params.row.date_of_birth) },
   { field: "address", headerName: "Alamat", width: 200, sortable: false },
-  { field: "service_start_date", headerName: "Buka Praktek Sejak", width: 150, sortable: false },
+  { field: "service_start_date", headerName: "Pengalaman", width: 150, sortable: false, renderCell: (params: any) => formatExperience(params.row.service_start_date) },
   { field: "email", headerName: "Alamat Surel", width: 200, sortable: false },
   {
     field: 'action',

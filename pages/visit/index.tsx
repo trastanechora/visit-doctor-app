@@ -25,6 +25,7 @@ const VisitPage: NextPageWithCustomProps = () => {
     fetch('/api/visit')
       .then((res) => res.json())
       .then((responseObject) => {
+        console.warn('responseObject', responseObject)
         setData(responseObject.data)
         setLoading(false)
         fetch(`/api/patient/list`)
@@ -77,8 +78,14 @@ const VisitPage: NextPageWithCustomProps = () => {
       })
   }
 
-  const handleOnRowClick = (event: any) => {
-    router.push(`/visit/${event.row.id}`);
+  const handleTriggerAction = (type: string, rowData: any) => {
+    if (type === 'view') {
+      router.push(`/visit/${rowData.row.id}`);
+    } else if (type === 'edit') {
+      router.push(`/visit/${rowData.row.id}/edit`);
+    } else {
+      console.warn('delete', rowData)
+    }
   }
 
   return (
@@ -156,12 +163,11 @@ const VisitPage: NextPageWithCustomProps = () => {
         <Box style={{ height: 700, width: '100%' }}>
           <DataGrid
             rows={data}
-            columns={TABLE_HEADER}
+            columns={TABLE_HEADER(handleTriggerAction)}
             pageSize={5}
             rowsPerPageOptions={[5]}
             disableSelectionOnClick
             disableColumnMenu
-            onRowClick={(event) => handleOnRowClick(event)}
             loading={isLoading}
           />
         </Box>

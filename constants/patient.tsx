@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { formatAge, formatMaritalStatus, formatGender } from '@/utils/formatter'
 
 export const SHEET_NAME = 'Patient'
 export const LAST_COLUMN = 'M'
@@ -26,6 +27,10 @@ export const maritalStatusList = [
   {
     text: 'Menikah',
     value: 'married'
+  },
+  {
+    text: 'Cerai',
+    value: 'divorced'
   }
 ]
 
@@ -42,10 +47,10 @@ export const TABLE_HEADER = (callbackFunction: (type: string, dataRow: any) => v
   { field: "record_number", headerName: "Nomor RM", width: 100, sortable: false },
   { field: "name", headerName: "Nama Pasien", width: 250, sortable: false },
   { field: "id_number", headerName: "NIK", width: 200, sortable: false },
-  { field: "gender", headerName: "Jenis Kelamin", width: 150, sortable: false },
-  { field: "date_of_birth", headerName: "Tanggal Lahir", width: 150, sortable: false },
+  { field: "gender", headerName: "Jenis Kelamin", width: 150, sortable: false, renderCell: (params: any) => formatGender(params.row.gender) },
+  { field: "date_of_birth", headerName: "Usia", width: 150, sortable: false, renderCell: (params: any) => formatAge(params.row.date_of_birth) },
   { field: "address", headerName: "Alamat", width: 300, sortable: false },
-  { field: "marital_status", headerName: "Status Pernikahan", width: 150, sortable: false },
+  { field: "marital_status", headerName: "Status Pernikahan", width: 150, sortable: false, renderCell: (params: any) => formatMaritalStatus(params.row.marital_status) },
   { field: "phone", headerName: "Nomor HP", width: 200, sortable: false },
   { field: "guarantor_phone", headerName: "Nomor HP Penjamin", width: 200, sortable: false },
   {
