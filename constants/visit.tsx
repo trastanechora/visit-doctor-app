@@ -20,12 +20,12 @@ export const initialFilterState = {
 export const TABLE_HEADER = (callbackFunction: (type: string, dataRow: any) => void) => [
   { field: "patient_id", headerName: "Nama Pasien", width: 200, sortable: false },
   { field: "doctor_id", headerName: "Nama Dokter", width: 200, sortable: false },
+  { field: "status", headerName: "Status Periksa", width: 200, sortable: false },
+  { field: "visit_date", headerName: "Tanggal Periksa", width: 200, sortable: false, renderCell: (params: any) => formatDate(params.row.visit_date) },
   { field: "weight", headerName: "Berat Badan", width: 200, sortable: false, renderCell: (params: any) => params.row.weight ? `${params.row.weight} Kg` : '-' },
   { field: "height", headerName: "Tinggi Badan", width: 200, sortable: false, renderCell: (params: any) => params.row.height ? `${params.row.height} cm` : '-' },
   { field: "temperature", headerName: "Temperatur Tubuh", width: 200, sortable: false, renderCell: (params: any) => params.row.temperature ? `${params.row.temperature} °C` : '-' },
   { field: "diagnosis", headerName: "Diagnosa", width: 200, sortable: false, renderCell: (params: any) => params.row.diagnosis ? params.row.diagnosis : '-' },
-  { field: "visit_date", headerName: "Tanggal Periksa", width: 200, sortable: false, renderCell: (params: any) => formatDate(params.row.visit_date) },
-  { field: "status", headerName: "Status Periksa", width: 200, sortable: false },
   { field: "scheduled_control_date", headerName: "Tanggal Kontrol Berikutnya", width: 200, sortable: false, renderCell: (params: any) => params.row.scheduled_control_date ? formatDate(params.row.scheduled_control_date) : '-' },
   {
     field: 'action',
