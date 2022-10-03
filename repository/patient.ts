@@ -54,6 +54,7 @@ export const createPatient = async (body: any) => {
   const response = await createItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,
+    tableEntity: TABLE_ENTITY,
     body: dataArray
   });
 

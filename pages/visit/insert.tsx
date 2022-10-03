@@ -126,7 +126,7 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
       .then((responseObject) => {
         console.log('SUCCESS!', responseObject)
         dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan rekam medis`, severity: 'success' } })
-        router.replace('/visit')
+        router.replace(`/visit/${responseObject.data.id}`)
         setLoading(false)
       }).catch((err) => {
         console.log('Error!', err)

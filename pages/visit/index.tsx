@@ -164,8 +164,8 @@ const VisitPage: NextPageWithCustomProps = () => {
           <DataGrid
             rows={data}
             columns={TABLE_HEADER(handleTriggerAction)}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[10, 20, 50]}
             disableSelectionOnClick
             disableColumnMenu
             loading={isLoading}

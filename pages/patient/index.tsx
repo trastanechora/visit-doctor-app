@@ -181,7 +181,7 @@ const PatientPage: NextPageWithCustomProps = () => {
             rows={data}
             columns={TABLE_HEADER(handleTriggerAction)}
             pageSize={10}
-            rowsPerPageOptions={[5, 10, 20, 50]}
+            rowsPerPageOptions={[10, 20, 50]}
             disableSelectionOnClick
             disableColumnMenu
             loading={isLoading}
