@@ -26,6 +26,7 @@ import { useAuthState } from '../../context/auth'
 import { drawerWidth, openedMixin, closedMixin, DrawerHeader } from './style'
 import { menuList } from './constant'
 import styles from '../../styles/Home.module.css'
+import { Container } from '@mui/material';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -195,9 +196,11 @@ const Dashboard: FC<PropsWithChildren> = ({ children }) => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {children}
+        <Container maxWidth={false} disableGutters sx={{ width: '100%', minHeight: 1000 }}>
+          {children}
+        </Container>
         <footer className={styles.footer}>
-          Made with Love by
+          Made with ❤️ by
           <a
             href="https://www.linkedin.com/in/trastanechora/"
             target="_blank"
