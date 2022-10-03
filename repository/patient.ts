@@ -50,7 +50,7 @@ export const getPatientOptions = async () => {
 
 export const createPatient = async (body: any) => {
   const currentDate = dayjs().format('YYYY-MM-DD');
-  const dataArray = ['=INDIRECT(ADDRESS(ROW()-1,COLUMN()))+1', body.name, body.idNumber, body.gender, body.dateOfBirth, body.address, body.maritalStatus, body.phone, body.guarantorPhone, currentDate, currentDate, body.currentUser]
+  const dataArray = ['=INDIRECT(ADDRESS(ROW()-1,COLUMN()))+1', body.name, body.idNumber, body.gender, body.dateOfBirth, null, null, body.address, body.maritalStatus, body.phone, body.guarantorPhone, currentDate, currentDate, body.currentUser]
   const response = await createItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,
@@ -62,7 +62,7 @@ export const createPatient = async (body: any) => {
 
 export const updatePatient = async (body: any) => {
   const currentDate = dayjs().format('YYYY-MM-DD');
-  const dataArray = [body.id, null, body.name, body.idNumber, body.gender, body.dateOfBirth, body.address, body.maritalStatus, body.phone, body.guarantorPhone, null, currentDate, body.currentUser]
+  const dataArray = [body.id, null, body.name, body.idNumber, body.gender, body.dateOfBirth, null, null, body.address, body.maritalStatus, body.phone, body.guarantorPhone, null, currentDate, body.currentUser]
   const response = await updateItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,

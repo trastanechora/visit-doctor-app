@@ -7,7 +7,6 @@ import FemaleIcon from '@mui/icons-material/Female';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import CircleIcon from '@mui/icons-material/Circle';
 
 export const formatGender = (gender: string) => {
   if (gender === 'male') {

@@ -6,7 +6,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { formatAge, formatMaritalStatus, formatGender } from '@/utils/formatter'
 
 export const SHEET_NAME = 'Patient'
-export const LAST_COLUMN = 'M'
+export const LAST_COLUMN = 'O'
 
 export const genderList = [
   {
@@ -78,4 +78,4 @@ export const FILTER_OBJECT = [
   { text: "Nomor HP Penjamin", value: "guarantor_phone", column: "J" }
 ];
 
-export const TABLE_ENTITY = ['id', 'record_number', 'name', 'id_number', 'gender', 'date_of_birth', 'address', 'marital_status', 'phone', 'guarantor_phone', 'created_date', 'updated_date', 'updated_by'];
+export const TABLE_ENTITY = ['id', 'record_number', 'name', 'id_number', 'gender', 'date_of_birth', 'blood_type', 'insurance', 'address', 'marital_status', 'phone', 'guarantor_phone', 'created_date', 'updated_date', 'updated_by'];

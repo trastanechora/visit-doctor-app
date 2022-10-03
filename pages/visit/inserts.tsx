@@ -1,33 +1,34 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import dayjs from 'dayjs';
-import { Typography, Box, Divider, Container, TextField, FormControl, Button, Autocomplete, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Typography, Box, Divider, Container, TextField, FormControl, Button, Autocomplete } from '@mui/material';
+import GTranslateIcon from '@mui/icons-material/GTranslate';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { translateDay } from '@/utils/translator';
-import { useNotificationContext } from '@/context/notification'
-import styles from '@/styles/Visit.module.css'
 
-import type { Dayjs } from 'dayjs'
-import type { NextPageWithCustomProps } from '@/types/custom'
+import styles from '../../styles/Visit.module.css'
+import { icdtenList } from '../../datasets/icd10'
+import { useAuthContext } from '../../context/auth'
+import type { NextPageWithCustomProps } from '../../types/custom'
 
 const InsertVisitPage: NextPageWithCustomProps = () => {
   const router = useRouter()
-  const [_, dispatch] = useNotificationContext()
   const [isLoading, setLoading] = useState<boolean>(false)
+  const [isEnglish, setIsEnglish] = useState<boolean>(false)
+  const [detail, setDetail] = useState<any>({})
   const [patientDetail, setPatientDetail] = useState<any>(null)
   const [patientOptions, setPatientOptions] = useState<any[]>([])
-  const [doctorDetail, setDoctorDetail] = useState<any>(null)
   const [doctorOptions, setDoctorOptions] = useState<any[]>([])
-  const [datePickerScheduleValue, setDatePickerScheduleValue] = useState<Dayjs | null>(dayjs());
   const [formState, setFormState] = useState({
     patientId: '',
     recordNumber: '',
     doctorId: '',
-    diagnose: '',
-    visitDate: ''
+    diagnose: ''
   });
+
+
+  const handleChange = (newValue: string, name: string) => {
+    setFormState({ ...formState, [name]: newValue });
+  };
 
   const handleChangePatientAndRecord = (newValue: { id: string; text: string; record_number: string; } | null) => {
     if (newValue !== null) {
@@ -39,22 +40,6 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
         })
     } else {
       setPatientDetail(undefined);
-    }
-  };
-
-  const handleChangeDoctor = (newValue: { id: string; text: string; } | null) => {
-    if (newValue !== null) {
-      setFormState({ ...formState, doctorId: newValue.id });
-      fetch(`/api/doctor?id=${newValue.id}`)
-        .then((res) => res.json())
-        .then((resObject) => {
-          const data = resObject.data;
-          data.doctor_schedule = JSON.parse(resObject.data.doctor_schedule)
-          setDoctorDetail(data);
-          console.warn('doctor detail', data)
-        })
-    } else {
-      setDoctorDetail(undefined);
     }
   };
 
@@ -73,20 +58,6 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
     } else {
       return 'Perempuan'
     }
-  }
-
-  const renderShedule = (doctorSchedule: any) => {
-    return Object.entries(doctorSchedule).filter(([_, value]: any) => value.isChecked).map(([key, value]: any) => (
-      <TableRow
-        key={key}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-      >
-        <TableCell component="th" scope="row">
-          {translateDay(key)}
-        </TableCell>
-        <TableCell align="right">{value.isChecked ? value.time : 'Tidak Buka'}</TableCell>
-      </TableRow>
-    ))
   }
 
   useEffect(() => {
@@ -115,27 +86,9 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
     console.warn('patientDetail', patientDetail)
   }, [patientDetail])
 
-  const handleSubmit = () => {
-    const body = {
-      ...formState,
-      visitDate: datePickerScheduleValue?.format('YYYY-MM-DD')
-    }
-    setLoading(true)
-    fetch('/api/visit', { method: 'POST', body: JSON.stringify(body) })
-      .then((res) => res.json())
-      .then((responseObject) => {
-        console.log('SUCCESS!', responseObject)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan rekam medis`, severity: 'success' } })
-        router.replace('/visit')
-        setLoading(false)
-      }).catch((err) => {
-        console.log('Error!', err)
-        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal menambahkan rekam medis, error: ${err}`, severity: 'error' } })
-        setLoading(false)
-      })
-  }
-
   if (isLoading) return <p>Loading...</p>
+
+  if (!isLoading && !detail) return <p>Rekam medis tidak dapat ditemukan</p>
 
   return (
     <div className={styles.container}>
@@ -159,7 +112,7 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
               <FormControl fullWidth>
                 <Autocomplete
                   fullWidth
-                  id="patient-input"
+                  id="icd-input"
                   options={patientOptions}
                   value={formState.patientId ? patientOptions.find((option) => option.id === formState.patientId) : { text: '' }}
                   onChange={(_, newVal) => handleChangePatientAndRecord(newVal)}
@@ -172,7 +125,7 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
               <FormControl fullWidth>
                 <Autocomplete
                   fullWidth
-                  id="doctor-input"
+                  id="icd-input"
                   options={patientOptions}
                   value={formState.recordNumber ? patientOptions.find((option) => option.record_number === formState.recordNumber) : { record_number: '' }}
                   onChange={(_, newVal) => handleChangePatientAndRecord(newVal)}
@@ -183,15 +136,15 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
             </Box>
           </Container>
           {patientDetail ? (<Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
-            <Box sx={{ width: '20%', paddingRight: 1 }}>
+            <Box sx={{ width: '25%', paddingRight: 1 }}>
               <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-                Usia
+                Umur
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {calculateAge(patientDetail.date_of_birth)} Tahun
               </Typography>
             </Box>
-            <Box sx={{ width: '20%', paddingLeft: 1, paddingRight: 1 }}>
+            <Box sx={{ width: '25%', paddingLeft: 1, paddingRight: 1 }}>
               <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
                 Jenis Kelamin
               </Typography>
@@ -199,15 +152,7 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
                 {translateGender(patientDetail.gender)}
               </Typography>
             </Box>
-            <Box sx={{ width: '20%', paddingLeft: 1, paddingRight: 1 }}>
-              <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-                Nomor HP
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {patientDetail.phone}
-              </Typography>
-            </Box>
-            <Box sx={{ width: '40%', paddingLeft: 1 }}>
+            <Box sx={{ width: '50%', paddingLeft: 1 }}>
               <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
                 Alamat
               </Typography>
@@ -224,7 +169,7 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
                   fullWidth
                   id="doctor-input"
                   options={doctorOptions}
-                  onChange={(_, newVal) => handleChangeDoctor(newVal)}
+                  onChange={(_, newVal) => handleChange(newVal?.id || '', 'doctorId')}
                   getOptionLabel={(option) => option.text}
                   renderInput={(params) => <TextField {...params} value={formState.doctorId} name="doctorId" label="Nama Dokter" />}
                 />
@@ -232,41 +177,49 @@ const InsertVisitPage: NextPageWithCustomProps = () => {
             </Box>
             <Box sx={{ width: '50%', paddingLeft: 1 }}>
               <FormControl fullWidth>
-                <MobileDatePicker
-                  label="Rencana Tanggal Periksa"
-                  inputFormat="YYYY-MM-DD"
-                  value={datePickerScheduleValue}
-                  onChange={(newValue) => setDatePickerScheduleValue(newValue)}
-                  renderInput={(params) => <TextField {...params} />}
-                  disabled={isLoading}
+                <Autocomplete
+                  fullWidth
+                  id="visit-date-input"
+                  options={icdtenList}
+                  getOptionLabel={(option) => `${option.code} - ${isEnglish ? option.en : option.idn}`}
+                  renderInput={(params) => <TextField {...params} label="Tanggal Periksa" />}
                 />
               </FormControl>
             </Box>
           </Container>
-          {doctorDetail ? (<Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
-            <Box sx={{ width: '50%' }}>
-              <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-                Jadwal Periksa {doctorDetail.name}:
-              </Typography>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Hari</TableCell>
-                    <TableCell align="right">Jam</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {renderShedule(doctorDetail.doctor_schedule)}
-                </TableBody>
-              </Table>
-            </Box>
-          </Container>) : null}
+          <Divider sx={{ marginBottom: 3 }} />
+          <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
+            <FormControl fullWidth>
+              <Box sx={{ width: '100%', padding: 0, textAlign: 'right' }}>
+                <Button variant='text' size="small" startIcon={<GTranslateIcon />} sx={{ textTransform: 'none', marginBottom: 1 }} onClick={() => setIsEnglish(!isEnglish)}>
+                  <Typography variant='caption'>{!isEnglish ? "Tampilkan Bahasa Inggris" : "Tampilkan Bahasa Indonesia"}</Typography>
+                </Button>
+              </Box>
+              <Autocomplete
+                fullWidth
+                id="icd-input"
+                options={icdtenList}
+                onChange={(_, newVal) => handleChange(newVal?.code || '', 'diagnose')}
+                getOptionLabel={(option) => `${option.code} - ${isEnglish ? option.en : option.idn}`}
+                renderInput={(params) => <TextField {...params} label="Diagnosis" />}
+              />
+            </FormControl>
+          </Container>
 
           <Divider sx={{ marginBottom: 3 }} />
           <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
-              <Button variant="contained" onClick={handleSubmit} disabled={isLoading} sx={{ textTransform: 'none' }}>Simpan</Button>
-            </Box>
+            <Typography color="primary">
+              DEV CONSOLE DEBUGGER:
+            </Typography>
+            <Typography>
+              patientId: {formState.patientId}
+            </Typography>
+            <Typography>
+              doctorId: {formState.doctorId}
+            </Typography>
+            <Typography>
+              diagnose: {formState.diagnose}
+            </Typography>
           </Container>
         </Container>
       </main>

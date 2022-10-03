@@ -49,7 +49,7 @@ const InsertPatientPage: NextPageWithCustomProps = () => {
         dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambahkan pasien ${values.name}`, severity: 'success' } })
         router.replace('/patient')
         setLoading(false)
-      }).then((err) => {
+      }).catch((err) => {
         dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal menambahkan pasien, error: ${err}`, severity: 'error' } })
         setLoading(false)
       })

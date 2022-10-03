@@ -1,14 +1,16 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
-import { Typography, Box, Divider, Button } from '@mui/material';
+import { Typography, Box, Divider, Button, Container } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import styles from '../../styles/Visit.module.css'
+import styles from '@/styles/Visit.module.css'
 
-import type { NextPageWithCustomProps } from '../../types/custom'
+import type { NextPageWithCustomProps } from '@/types/custom'
 
-import { icdtenList } from '../../datasets/icd10'
+import { icdtenList } from '@/datasets/icd10';
+import { formatDate } from '@/utils/formatter';
+import { translateGender } from '@/utils/translator';
 
 const VisitDetailPage: NextPageWithCustomProps = () => {
   const router = useRouter()
@@ -53,6 +55,10 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
     return calculatedAge;
   }
 
+  const handleClickExamine = () => {
+    router.push(`/visit/${id}/examine`)
+  }
+
   if (isLoading) return <p>Loading...</p>
 
   if (!isLoading && !detail) return <p>Rekam medis tidak dapat ditemukan</p>
@@ -65,7 +71,7 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
           <Button variant="outlined" onClick={() => router.back()} startIcon={<ChevronLeftIcon />} sx={{ marginRight: 3, textTransform: 'none' }}>Kembali</Button>
           <Typography variant="h4" color="primary" sx={{ fontWeight: 600, marginBottom: 3 }}>
@@ -74,63 +80,106 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
         </Box>
 
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '50%' }}>
+          <Box sx={{ width: '33%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Status:
             </Typography>
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="body1" gutterBottom sx={{ marginTop: 2 }}>
               {detail.status === 'scheduled' ? 'Dijadwalkan' : 'Selesai'}
             </Typography>
           </Box>
-          <Box sx={{ width: '50%' }}>
+          <Box sx={{ width: '33%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Tanggal Periksa:
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.visit_date}
+            <Typography variant="body1" gutterBottom sx={{ marginTop: 2 }}>
+              {formatDate(detail.visit_date)}
             </Typography>
           </Box>
-        </Box>
-
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '50%' }}>
+          <Box sx={{ width: '33%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Nama Pasien:
+              Nama Dokter Pemeriksa:
             </Typography>
-            <Button variant="text" onClick={redirectToPatient}>
-              {detail.patient?.name}
-            </Button>
-          </Box>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Nama Dokter:
-            </Typography>
-            <Button variant="text" onClick={redirectToDoctor}>
+            <Button variant="text" color="inherit" onClick={redirectToDoctor} sx={{ textTransform: 'none' }}>
               {detail.doctor?.name}
             </Button>
           </Box>
         </Box>
+        <Divider sx={{ marginBottom: 3 }} />
 
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
+          <Box sx={{ width: '100%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Nama Pasien:
+            </Typography>
+            <Button variant="text" color="inherit" onClick={redirectToPatient} sx={{ textTransform: 'none' }}>
+              <Typography sx={{ paddingBottom: 0 }} variant="h5" display="block" color="primary" gutterBottom>
+                {detail.patient?.name}
+              </Typography>
+            </Button>
+          </Box>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
+          <Box sx={{ width: '100%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Nomor Rekam Medis Pasien:
+            </Typography>
+            <Typography variant="h5" gutterBottom color="primary">
+              {detail.patient?.record_number}
+            </Typography>
+          </Box>
+        </Box>
+        <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
+          <Box sx={{ width: '15%', paddingRight: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Usia
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {calculateAge(detail.patient?.date_of_birth)} Tahun
+            </Typography>
+          </Box>
+          <Box sx={{ width: '15%', paddingLeft: 1, paddingRight: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Jenis Kelamin
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {translateGender(detail.patient?.gender)}
+            </Typography>
+          </Box>
+          <Box sx={{ width: '15%', paddingRight: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Golongan Darah
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.patient?.gender}
+            </Typography>
+          </Box>
+          <Box sx={{ width: '15%', paddingLeft: 1, paddingRight: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Nomor HP
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.patient?.phone}
+            </Typography>
+          </Box>
+          <Box sx={{ width: '40%', paddingLeft: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Alamat
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.patient?.address}
+            </Typography>
+          </Box>
+        </Container>
+        <Divider sx={{ marginBottom: 3 }} />
+      </Container>
+
+      {detail.status !== 'scheduled' ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
           <Box sx={{ width: '50%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Keluhan:
             </Typography>
-            {/* <Autocomplete
-              fullWidth
-              id="combo-box-demo"
-              options={icdtenList}
-              getOptionLabel={(option) => `${option.code} - ${option.idn}`}
-              renderInput={(params) => <TextField {...params} label="Diagnosis" />}
-            /> */}
-            {/* <List dense>
-                  {
-                    detail.symptoms?.map((symptom: string, index: number) => (<ListItem key={`${index}-${symptom}`}>
-                      <ListItemText
-                        primary={symptom} />
-                      </ListItem>))
-                  }
-            </List> */}
             <Typography variant="body1" gutterBottom>
               {detail.symptoms}
             </Typography>
@@ -239,7 +288,13 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
           </Typography>
         </Box>
         <Divider sx={{ marginBottom: 3 }} />
-      </main>
+      </Container> : null}
+
+      <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
+          <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Periksa</Button>
+        </Box>
+      </Container>
     </div>
   )
 }

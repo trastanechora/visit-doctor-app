@@ -1,7 +1,9 @@
+import dayjs from 'dayjs';
 import { initJoin, initSingle, initFilteredJoin } from './init';
-import { SHEET_NAME, TABLE_ENTITY, LAST_COLUMN } from '../constants/visit'
-import { LAST_COLUMN as PATIENT_LAST_COLUMN, TABLE_ENTITY as PATIENT_TABLE_ENTITY, SHEET_NAME as PATIENT_SHEET_NAME } from '../constants/patient'
-import { LAST_COLUMN as DOCTOR_LAST_COLUMN, TABLE_ENTITY as DOCTOR_TABLE_ENTITY, SHEET_NAME as DOCTOR_SHEET_NAME } from '../constants/doctor'
+import { createItem } from './create';
+import { SHEET_NAME, TABLE_ENTITY, LAST_COLUMN } from '@/constants/visit';
+import { LAST_COLUMN as PATIENT_LAST_COLUMN, TABLE_ENTITY as PATIENT_TABLE_ENTITY, SHEET_NAME as PATIENT_SHEET_NAME } from '@/constants/patient';
+import { LAST_COLUMN as DOCTOR_LAST_COLUMN, TABLE_ENTITY as DOCTOR_TABLE_ENTITY, SHEET_NAME as DOCTOR_SHEET_NAME } from '@/constants/doctor';
 
 export const getAllVisit = async (offset: number, limit: number) => {
   const dataRows = await initJoin({
@@ -65,4 +67,16 @@ export const getVisitByFilter = async (filter: string) => {
   });
 
   return { table_name: SHEET_NAME, table_entity: TABLE_ENTITY, column_count: TABLE_ENTITY.length, last_column: LAST_COLUMN, filter, data: dataRows };
+}
+
+export const createVisit = async (body: any) => {
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  const dataArray = [body.patientId, body.doctorId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, body.visitDate, 'scheduled', null, null, null, null, null, null, null, currentDate]
+  const response = await createItem({
+    sheetName: SHEET_NAME,
+    lastColumn: LAST_COLUMN,
+    body: dataArray
+  });
+
+  return { table_name: SHEET_NAME, data: response };
 }
