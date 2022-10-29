@@ -8,9 +8,9 @@ import styles from '@/styles/Visit.module.css'
 
 import type { NextPageWithCustomProps } from '@/types/custom'
 
-import { icdtenList } from '@/datasets/icd10';
-import { formatDate } from '@/utils/formatter';
+import { formatDate, formatTextVisitStatus, formatAge } from '@/utils/formatter';
 import { translateGender } from '@/utils/translator';
+import { statusMapper } from '@/utils/mapper';
 
 const VisitDetailPage: NextPageWithCustomProps = () => {
   const router = useRouter()
@@ -39,22 +39,6 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
     router.push(`/doctor/${detail.doctor?.id}`)
   }
 
-  const getDiagnosis = (code: string) => {
-    const diagnosis = icdtenList.find((icdten) => icdten.code === code)
-    if (!diagnosis) return 'Diagnosa tidak ada';
-
-    return `${diagnosis.code} - ${diagnosis.idn}`;
-  }
-
-  const calculateAge = (stringBirthDate: string) => {
-    const birthDate = new Date(stringBirthDate);
-    const difference = Date.now() - birthDate.getTime();
-
-    const ageDate = new Date(difference);
-    const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-    return calculatedAge;
-  }
-
   const handleClickExamine = () => {
     router.push(`/visit/${id}/examine`)
   }
@@ -62,6 +46,8 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
   if (isLoading) return <p>Loading...</p>
 
   if (!isLoading && !detail) return <p>Rekam medis tidak dapat ditemukan</p>
+
+  const statusMapped = statusMapper(detail.status);
 
   return (
     <div className={styles.container}>
@@ -85,7 +71,7 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
               Status:
             </Typography>
             <Typography variant="body1" gutterBottom sx={{ marginTop: 2 }}>
-              {detail.status === 'scheduled' ? 'Dijadwalkan' : 'Selesai'}
+              {formatTextVisitStatus(detail.status)}
             </Typography>
           </Box>
           <Box sx={{ width: '33%' }}>
@@ -129,16 +115,17 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
             </Typography>
           </Box>
         </Box>
-        <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
-          <Box sx={{ width: '15%', paddingRight: 1 }}>
+
+        {statusMapped.includes('schedule') ? <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1, flexWrap: 'wrap' }}>
+          <Box sx={{ width: '30%', paddingRight: 1 }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Usia
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {calculateAge(detail.patient?.date_of_birth)} Tahun
+              {formatAge(detail.patient?.date_of_birth)}
             </Typography>
           </Box>
-          <Box sx={{ width: '15%', paddingLeft: 1, paddingRight: 1 }}>
+          <Box sx={{ width: '30%', paddingLeft: 1, paddingRight: 1 }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Jenis Kelamin
             </Typography>
@@ -146,15 +133,15 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
               {translateGender(detail.patient?.gender)}
             </Typography>
           </Box>
-          <Box sx={{ width: '15%', paddingRight: 1 }}>
+          <Box sx={{ width: '40%', paddingRight: 1 }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Golongan Darah
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {detail.patient?.gender}
+              {detail.patient?.blood_type}
             </Typography>
           </Box>
-          <Box sx={{ width: '15%', paddingLeft: 1, paddingRight: 1 }}>
+          <Box sx={{ width: '30%', paddingRight: 1 }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Nomor HP
             </Typography>
@@ -162,7 +149,15 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
               {detail.patient?.phone}
             </Typography>
           </Box>
-          <Box sx={{ width: '40%', paddingLeft: 1 }}>
+          <Box sx={{ width: '30%', paddingLeft: 1, paddingRight: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Asuransi
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.patient?.insurance}
+            </Typography>
+          </Box>
+          <Box sx={{ width: '40%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
               Alamat
             </Typography>
@@ -170,11 +165,11 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
               {detail.patient?.address}
             </Typography>
           </Box>
-        </Container>
+        </Container> : null}
         <Divider sx={{ marginBottom: 3 }} />
       </Container>
 
-      {detail.status !== 'scheduled' ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+      {/* {statusMapped.includes('schedule') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
           <Box sx={{ width: '50%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
@@ -194,33 +189,6 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
           </Box>
         </Box>
         <Divider sx={{ marginBottom: 3 }} />
-
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '33%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Suhu Tubuh:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.temperature} °C
-            </Typography>
-          </Box>
-          <Box sx={{ width: '33%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Berat Badan:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.weight} Kg
-            </Typography>
-          </Box>
-          <Box sx={{ width: '33%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Tinggi Badan:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.height} cm
-            </Typography>
-          </Box>
-        </Box>
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
           <Box sx={{ width: '33%' }}>
             <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
@@ -288,11 +256,42 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
           </Typography>
         </Box>
         <Divider sx={{ marginBottom: 3 }} />
+      </Container> : null} */}
+
+      {statusMapped.includes('examine') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
+          Examining Info
+        </Box>
+        <Divider sx={{ marginBottom: 3 }} />
       </Container> : null}
 
-      <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+      {statusMapped.includes('recipe') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
+          Recipe Info
+        </Box>
+        <Divider sx={{ marginBottom: 3 }} />
+      </Container> : null}
+
+      {statusMapped.includes('payment') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
+          Payment Info
+        </Box>
+        <Divider sx={{ marginBottom: 3 }} />
+      </Container> : null}
+
+      {statusMapped.includes('done') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
+          Done Info
+        </Box>
+        <Divider sx={{ marginBottom: 3 }} />
+      </Container> : null}
+
+      <Container maxWidth={false} disableGutters sx={{ width: '100%', marginBottom: 4 }}>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
-          <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Periksa</Button>
+          {detail.status === 'schedule' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Periksa</Button> : null}
+          {detail.status === 'examine' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Beri Resep Obat</Button> : null}
+          {detail.status === 'recipe' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Selesaikan Pembayaran</Button> : null}
+          {detail.status === 'payment' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Selesaikan Rekam Medis</Button> : null}
         </Box>
       </Container>
     </div>

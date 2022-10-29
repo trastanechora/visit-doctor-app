@@ -7,6 +7,11 @@ import FemaleIcon from '@mui/icons-material/Female';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import PaidIcon from '@mui/icons-material/Paid';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 export const formatGender = (gender: string) => {
   if (gender === 'male') {
@@ -28,11 +33,41 @@ export const formatMaritalStatus = (maritalStatus: string) => {
 
 export const formatAge = (stringBirthDate: string) => {
   const birthDate = new Date(stringBirthDate);
-  const difference = Date.now() - birthDate.getTime();
-
-  const ageDate = new Date(difference);
-  const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-  return `${calculatedAge} Tahun`;
+  const now = new Date();
+  var seconds = Math.floor((Number(now) - Number(birthDate)) / 1000);
+  var interval = seconds / 31536000;
+  if (interval > 1) {
+    const year = Math.floor(interval);
+    const remain = interval % 31536000;
+    const month = Math.floor((remain - year) * 12);
+    if (month) {
+      return year + " Tahun " + month + " Bulan";
+    }
+    return year + " Tahun"
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    const month = Math.floor(interval);
+    const remain = interval % 2592000;
+    const day = Math.floor((remain - month) * 30);
+    if (day) {
+      return month + " Bulan " + day + " Hari";
+    }
+    return month + " Bulan"
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return Math.floor(interval) + " Hari";
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return Math.floor(interval) + " Jam";
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return Math.floor(interval) + " Menit";
+  }
+  return Math.floor(seconds) + " Detik";
 }
 
 export const formatExperience = (stringServiceStartDate: string) => {
@@ -58,5 +93,35 @@ export const formatStatus = (status: string) => {
     return <Chip variant="outlined" size="small" color="success" label="Aktif" icon={< RadioButtonCheckedIcon />} />
   } else {
     return <Chip variant="outlined" size="small" color="error" label="Tidak Aktif" icon={< CancelIcon />} />
+  }
+}
+
+export const formatVisitStatus = (status: string) => {
+  switch (status) {
+    case 'schedule':
+      return <Chip variant="outlined" size="small" color="primary" label="Menunggu Jadwal Periksa" icon={< AccessTimeIcon />} />;
+    case 'examine':
+      return <Chip variant="outlined" size="small" color="warning" label="Menunggu Resep Obat" icon={< MonitorHeartIcon />} />;
+    case 'recipe':
+      return <Chip variant="outlined" size="small" color="secondary" label="Menunggu Pembayaran" icon={< ReceiptIcon />} />
+    case 'payment':
+      return <Chip variant="outlined" size="small" color="success" label="Menunggu Penyerahan Obat" icon={< PaidIcon />} />;
+    case 'done':
+      return <Chip variant="outlined" size="small" color="default" label="Selesai" icon={< VerifiedIcon />} />
+  }
+}
+
+export const formatTextVisitStatus = (status: string) => {
+  switch (status) {
+    case 'schedule':
+      return '(1/5) Terdaftar / Terjadwal';
+    case 'examine':
+      return '(2/5) Sudah Diperiksa';
+    case 'recipe':
+      return '(3/5) Sudah Diberi Resep Obat';
+    case 'payment':
+      return '(4/5) Sudah Dibayar';
+    case 'done':
+      return '(5/5) Selesai'
   }
 }

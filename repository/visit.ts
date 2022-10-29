@@ -71,7 +71,7 @@ export const getVisitByFilter = async (filter: string) => {
 
 export const createVisit = async (body: any) => {
   const currentDate = dayjs().format('YYYY-MM-DD');
-  const dataArray = [body.patientId, body.doctorId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, body.visitDate, 'scheduled', null, null, null, null, null, null, null, currentDate]
+  const dataArray = [body.patientId, body.doctorId, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, body.visitDate, 'schedule', null, null, null, null, null, null, null, currentDate]
   const response = await createItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,

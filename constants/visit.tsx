@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { formatDate } from '@/utils/formatter';
+import { formatDate, formatVisitStatus } from '@/utils/formatter';
 
 export const SHEET_NAME = 'Visit'
 export const LAST_COLUMN = 'AG'
@@ -20,13 +20,13 @@ export const initialFilterState = {
 export const TABLE_HEADER = (callbackFunction: (type: string, dataRow: any) => void) => [
   { field: "patient_id", headerName: "Nama Pasien", width: 200, sortable: false },
   { field: "doctor_id", headerName: "Nama Dokter", width: 200, sortable: false },
-  { field: "status", headerName: "Status Periksa", width: 200, sortable: false },
+  { field: "status", headerName: "Status Periksa", width: 300, sortable: false, renderCell: (params: any) => formatVisitStatus(params.row.status) },
   { field: "visit_date", headerName: "Tanggal Periksa", width: 200, sortable: false, renderCell: (params: any) => formatDate(params.row.visit_date) },
-  { field: "weight", headerName: "Berat Badan", width: 200, sortable: false, renderCell: (params: any) => params.row.weight ? `${params.row.weight} Kg` : '-' },
-  { field: "height", headerName: "Tinggi Badan", width: 200, sortable: false, renderCell: (params: any) => params.row.height ? `${params.row.height} cm` : '-' },
-  { field: "temperature", headerName: "Temperatur Tubuh", width: 200, sortable: false, renderCell: (params: any) => params.row.temperature ? `${params.row.temperature} °C` : '-' },
-  { field: "diagnosis", headerName: "Diagnosa", width: 200, sortable: false, renderCell: (params: any) => params.row.diagnosis ? params.row.diagnosis : '-' },
-  { field: "scheduled_control_date", headerName: "Tanggal Kontrol Berikutnya", width: 200, sortable: false, renderCell: (params: any) => params.row.scheduled_control_date ? formatDate(params.row.scheduled_control_date) : '-' },
+  // { field: "weight", headerName: "Berat Badan", width: 200, sortable: false, renderCell: (params: any) => params.row.weight ? `${params.row.weight} Kg` : '-' },
+  // { field: "height", headerName: "Tinggi Badan", width: 200, sortable: false, renderCell: (params: any) => params.row.height ? `${params.row.height} cm` : '-' },
+  // { field: "temperature", headerName: "Temperatur Tubuh", width: 200, sortable: false, renderCell: (params: any) => params.row.temperature ? `${params.row.temperature} °C` : '-' },
+  // { field: "diagnosis", headerName: "Diagnosa", width: 200, sortable: false, renderCell: (params: any) => params.row.diagnosis ? params.row.diagnosis : '-' },
+  // { field: "scheduled_control_date", headerName: "Tanggal Kontrol Berikutnya", width: 200, sortable: false, renderCell: (params: any) => params.row.scheduled_control_date ? formatDate(params.row.scheduled_control_date) : '-' },
   {
     field: 'action',
     headerName: 'Tindakan',
