@@ -173,7 +173,8 @@ export const initJoin = async (props: InitJoinedDBProps) => {
     responseValueRenderOption: 'FORMATTED_VALUE',
     requestBody: {
       values: [
-        [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.chief_complaint, v.subjectives, v.allergy_history, v.general_condition, v.gcs, v.weight, v.height, v.blood_pressure, v.heart_rate, v.respiration_rate, v.temperature, v.o2_saturation, v.pain_scale, v.physical_examination, v.laboratory_results, v.radiology_result, v.diagnosis, v.plan_or_treatment, v.note, v.visit_date, v.status, v.scheduled_control_date, v.medicine_ids, v.medicine_amounts, v.medicine_subtotal, v.treatment_charge, v.total_treatment_raw, v.total_charge, v.total_charge_raw FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id ORDER BY v.created_date ASC", ${sheetName}!A1:${lastColumn}, Patient!A1:K, Doctor!A1:P)`]
+        [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.visit_date, v.status FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id ORDER BY v.created_date ASC", ${sheetName}!A1:${lastColumn}, Patient!A1:K, Doctor!A1:P)`]
+        // [`=SUPERSQL("SELECT v.id, p.name as patient_name, d.name as doctor_name, v.chief_complaint, v.subjectives, v.allergy_history, v.general_condition, v.gcs, v.weight, v.height, v.blood_pressure, v.heart_rate, v.respiration_rate, v.temperature, v.o2_saturation, v.pain_scale, v.physical_examination, v.laboratory_results, v.radiology_result, v.diagnosis, v.plan_or_treatment, v.note, v.visit_date, v.status, v.scheduled_control_date, v.medicine_ids, v.medicine_amounts, v.medicine_subtotal, v.treatment_charge, v.total_treatment_raw, v.total_charge, v.total_charge_raw FROM ? v LEFT JOIN ? p ON v.patient_id = p.id LEFT JOIN ? d ON v.doctor_id = d.id ORDER BY v.created_date ASC", ${sheetName}!A1:${lastColumn}, Patient!A1:K, Doctor!A1:P)`]
       ],
     }
   })

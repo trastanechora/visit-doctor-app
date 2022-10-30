@@ -33,7 +33,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
     height: '',
     temperature: '',
     heartRate: '',
-    boodPressure: '',
+    bloodPressure: '',
     respirationRate: '',
     o2Saturation: '',
     subjectives: '',
@@ -71,6 +71,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
         .then((res) => res.json())
         .then((responseObject) => {
           setDetail(responseObject.data);
+          setFormState({ ...formState, patientId: responseObject.data?.patient?.id || '', doctorId: responseObject.data?.doctor?.id || '' })
           setLoading(false)
         })
     }
@@ -89,11 +90,23 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
   }
 
   const handleSubmit = () => {
-    const body = {
-      ...formState,
-      visitDate: datePickerScheduleValue?.format('YYYY-MM-DD')
+    const body = { ...formState, action: 'examine', chiefComplaint: JSON.stringify(formState.chiefComplaint), allergyHistory: JSON.stringify(formState.allergyHistory) }
+    if (formState.isScheduleControllNeeded) {
+      body.scheduledControllDate = datePickerScheduleValue?.format('YYYY-MM-DD') || ''
     }
     setLoading(true)
+    fetch(`/api/visit/${id}`, { method: 'PUT', body: JSON.stringify(body) })
+      .then((res) => res.json())
+      .then((responseObject) => {
+        console.log('SUCCESS!', responseObject)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambah pencatatan periksa rekam medis`, severity: 'success' } })
+        // router.replace(`/visit/${responseObject.data.id}`)
+        setLoading(false)
+      }).catch((err) => {
+        console.log('Error!', err)
+        dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Gagal menambah pencatatan periksa rekam medis, error: ${err}`, severity: 'error' } })
+        setLoading(false)
+      })
   }
 
   if (isLoading) return <p>Loading...</p>
@@ -178,9 +191,10 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
             <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
               <Autocomplete
                 multiple
+                clearOnBlur
+                freeSolo
                 id="chief-complaint-input"
                 options={[]}
-                freeSolo
                 onChange={(_, newVal) => handleChange(newVal, 'chiefComplaint')}
                 renderTags={(value: readonly string[], getTagProps) =>
                   value.map((option: string, index: number) => (
@@ -200,9 +214,10 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
             <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
               <Autocomplete
                 multiple
+                clearOnBlur
+                freeSolo
                 id="allergy-history-input"
                 options={[]}
-                freeSolo
                 onChange={(_, newVal) => handleChange(newVal, 'allergyHistory')}
                 renderTags={(value: readonly string[], getTagProps) =>
                   value.map((option: string, index: number) => (
@@ -221,8 +236,8 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
             </Box>
           </Container>
 
-          <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
-            <Box sx={{ width: '33%', paddingRight: 1 }}>
+          <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1, flexWrap: 'wrap' }}>
+            <Box sx={{ width: '50%', paddingRight: 1, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="weight-input"
@@ -235,7 +250,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 }}
               />
             </Box>
-            <Box sx={{ width: '33%', paddingLeft: 1, paddingRight: 1 }}>
+            <Box sx={{ width: '50%', paddingLeft: 1, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="height-input"
@@ -248,7 +263,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 }}
               />
             </Box>
-            <Box sx={{ width: '33%', paddingLeft: 1 }}>
+            <Box sx={{ width: '50%', paddingRight: 1, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="temperature-input"
@@ -261,10 +276,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 }}
               />
             </Box>
-          </Container>
-
-          <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1 }}>
-            <Box sx={{ width: '33%', paddingRight: 1 }}>
+            <Box sx={{ width: '50%', paddingLeft: 1, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="heart-rate-input"
@@ -277,7 +289,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 }}
               />
             </Box>
-            <Box sx={{ width: '33%', paddingLeft: 1, paddingRight: 1 }}>
+            <Box sx={{ width: '50%', paddingRight: 1, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="blood-pressure-input"
@@ -290,7 +302,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 }}
               />
             </Box>
-            <Box sx={{ width: '33%', paddingLeft: 1 }}>
+            <Box sx={{ width: '50%', paddingLeft: 1, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="respiration-rate-input"
@@ -303,11 +315,24 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 }}
               />
             </Box>
+            <Box sx={{ width: '50%', paddingRight: 1 }}>
+              <TextField
+                fullWidth
+                id="o2-saturation-input"
+                label="Saturasi O2"
+                type="number"
+                name="o2Saturation"
+                onChange={handleChangeInput}
+                InputProps={{
+                  endAdornment: <InputAdornment position="start">Sp02</InputAdornment>,
+                }}
+              />
+            </Box>
           </Container>
           <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
 
           <Container maxWidth={false} disableGutters sx={{ width: '100%', display: 'flex', marginBottom: 1, flexWrap: 'wrap' }}>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 multiline
@@ -318,7 +343,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 multiline
@@ -329,7 +354,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 multiline
@@ -340,7 +365,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 multiline
@@ -351,7 +376,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 multiline
@@ -362,7 +387,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="laboratory-result-input"
@@ -371,7 +396,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="radiology-result-input"
@@ -380,7 +405,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                 onChange={handleChangeInput}
               />
             </Box>
-            <Box sx={{ width: '100%', padding: 0, marginBottom: 1 }}>
+            <Box sx={{ width: '100%', padding: 0, marginBottom: 2 }}>
               <TextField
                 fullWidth
                 id="plan-or-treatment-input"
@@ -433,7 +458,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
                       control={
                         <Checkbox checked={formState.isScheduleControllNeeded} name="isScheduleControllNeeded" onChange={handleChangeCheck} />
                       }
-                      label="Apakah Perlu Kontrol Lanjutan?"
+                      label="Apakah perlu kontrol lanjutan?"
                     />
                   </Box>
                   {formState.isScheduleControllNeeded ? <Box sx={{

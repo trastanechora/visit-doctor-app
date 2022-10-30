@@ -47,4 +47,5 @@ export const FILTER_OBJECT = [
   { text: "Status Periksa", value: "status", column: "X" }
 ];
 
-export const TABLE_ENTITY = ['id', 'patient_id', 'doctor_id', 'chief_complaint', 'subjectives', 'allergy_history', 'general_condition', 'gcs', 'weight', 'height', 'blood_pressure', 'heart_rate', 'respiration_rate', 'temperature', 'o2_saturation', 'pain_scale', 'physical_examination', 'laboratory_results', 'radiology_result', 'diagnosis', 'plan_or_treatment', 'note', 'visit_date', 'status', 'scheduled_control_date', 'medicine_ids', 'medicine_amounts', 'medicine_subtotal', 'treatment_charge', 'total_treatment_raw', 'total_charge', 'total_charge_raw', 'created_date'];
+export const TABLE_ENTITY = ['id', 'patient_id', 'doctor_id', 'visit_date', 'status'];
+export const OBJECT_ENTITY = ['id', 'patient_id', 'doctor_id', 'chief_complaint', 'subjectives', 'allergy_history', 'general_condition', 'gcs', 'weight', 'height', 'blood_pressure', 'heart_rate', 'respiration_rate', 'temperature', 'o2_saturation', 'pain_scale', 'physical_examination', 'laboratory_results', 'radiology_result', 'diagnosis', 'plan_or_treatment', 'note', 'visit_date', 'status', 'scheduled_control_date', 'medicine_ids', 'medicine_amounts', 'medicine_subtotal', 'treatment_charge', 'total_treatment_raw', 'total_charge', 'total_charge_raw', 'created_date'];
