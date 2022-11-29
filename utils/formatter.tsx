@@ -12,6 +12,8 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PaidIcon from '@mui/icons-material/Paid';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import { icdtenList } from '@/datasets/icd10';
+import Typography from '@mui/material/Typography';
 
 export const formatGender = (gender: string) => {
   if (gender === 'male') {
@@ -124,4 +126,21 @@ export const formatTextVisitStatus = (status: string) => {
     case 'done':
       return '(5/5) Selesai'
   }
+}
+
+export const formatDiagnosis = (code: string) => {
+  const diagnosis = icdtenList.find((icdten) => icdten.code === code)
+  if (!diagnosis) return 'Diagnosa tidak ada';
+
+  return `${diagnosis.code} - ${diagnosis.idn}`;
+}
+
+export const formatUnorderedListItem = (jsonString: string) => {
+  if (!jsonString) return '-'
+  const parsedArray = JSON.parse(jsonString);
+  return (<ul>
+    {parsedArray.map((item: string, index: number) => {
+      return (<li key={`${index}-${item}`}><Typography>{item}</Typography></li>)
+    })}
+  </ul>)
 }

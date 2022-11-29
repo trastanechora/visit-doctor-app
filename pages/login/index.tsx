@@ -15,7 +15,7 @@ const LoginPage: NextPage = () => {
   const doLogin = () => {
     const userId = getCookie('user_id');
     if (!userId) {
-      signIn('google', { callbackUrl: '/doctor' })
+      signIn('google', { callbackUrl: '/doctor' }, { prompt: "login" })
       return;
     }
     dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Sesi login Anda masih tersimpan, logout jika ingin menggunakan akun lain.`, severity: 'success' } })

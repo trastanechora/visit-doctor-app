@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router'
-import { Typography, Box, Divider, Container, Button, FormControl, Autocomplete, TextField, Chip, InputAdornment, FormLabel, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { Typography, Box, Divider, Container, Button, FormControl, Autocomplete, TextField, Chip, InputAdornment, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { useNotificationContext } from '@/context/notification'
 import { formatAge } from '@/utils/formatter'
@@ -10,6 +10,7 @@ import { icdtenList } from '@/datasets/icd10'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import styles from '@/styles/Visit.module.css'
+
 
 import type { ChangeEvent } from 'react';
 import type { Dayjs } from 'dayjs'
@@ -100,7 +101,7 @@ const ExamineVisitPage: NextPageWithCustomProps = () => {
       .then((responseObject) => {
         console.log('SUCCESS!', responseObject)
         dispatch({ type: 'OPEN_NOTIFICATION', payload: { message: `Berhasil menambah pencatatan periksa rekam medis`, severity: 'success' } })
-        // router.replace(`/visit/${responseObject.data.id}`)
+        router.replace(`/visit/${id}`)
         setLoading(false)
       }).catch((err) => {
         console.log('Error!', err)
