@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { getDoctorByEmail } from '../../../repository/doctor'
+import { getDoctorByEmail } from '@/repository/doctor'
 import { setCookie } from 'cookies-next';
 
 const getAuthOptions = (callbacks: NextAuthOptions['callbacks']) => {

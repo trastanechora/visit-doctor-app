@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { reducer } from './reducer'
 import { getCookie, deleteCookie } from 'cookies-next';
 
-import type { FC } from 'react';
 import type { Props, AuthState, AuthAction, UserObject } from './types'
 
 const initialState: AuthState = {
@@ -19,22 +18,22 @@ const initialState: AuthState = {
 const ContextState = createContext<AuthState | undefined>(undefined);
 const ContextDispatch = createContext<Dispatch<AuthAction> | undefined>(undefined);
 
-export const AuthProvider: FC<Props> = (props) => {
+export const AuthProvider = (props: Props) => {
   const { children } = props;
   const router = useRouter()
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      deleteCookie('user_id')
+      deleteCookie('name')
+      deleteCookie('email')
+      deleteCookie('image')
+      router.push('/login');
+    },
+  })
   const loading = status === "loading"
-
-  console.warn('session from context', session)
-  if (!loading && !session) {
-    deleteCookie('user_id')
-    deleteCookie('name')
-    deleteCookie('email')
-    deleteCookie('image')
-    router.push('/login');
-  }
 
   useEffect(() => {
     if (!loading && session) {
