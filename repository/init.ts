@@ -41,6 +41,8 @@ interface InitListOptionsProps {
   nameColumn: string;
   recordColumn?: string;
   stockColumn?: string;
+  priceColumn?: string;
+  codeColumn?: string;
 }
 
 const auth = new google.auth.GoogleAuth({
@@ -236,7 +238,9 @@ export const initListOptions = async (props: InitListOptionsProps) => {
     sheetName,
     nameColumn,
     recordColumn,
-    stockColumn
+    stockColumn,
+    codeColumn,
+    priceColumn
   } = props
 
   const authClientObject = await auth.getClient();
@@ -253,7 +257,9 @@ export const initListOptions = async (props: InitListOptionsProps) => {
     ranges = [
       `${sheetName}!A2:A`,
       `${sheetName}!${nameColumn}2:${nameColumn}`,
-      `${sheetName}!${stockColumn}2:${stockColumn}`
+      `${sheetName}!${stockColumn}2:${stockColumn}`,
+      `${sheetName}!${codeColumn}2:${codeColumn}`,
+      `${sheetName}!${priceColumn}2:${priceColumn}`
     ]
   } else {
     ranges = [
@@ -289,11 +295,22 @@ export const initListOptions = async (props: InitListOptionsProps) => {
     return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '', record_number: recordStack ? recordStack[index] : '' }));
   } else if (stockColumn) {
     const rawStockStack = readData.data.valueRanges ? readData.data.valueRanges[2].values : [];
+    const rawCodeStack = readData.data.valueRanges ? readData.data.valueRanges[3].values : [];
+    const rawPriceStack = readData.data.valueRanges ? readData.data.valueRanges[4].values : [];
     const stockStack = rawStockStack?.map((rm) => {
       const [rawRm] = rm;
       return rawRm;
     })
-    return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '', stock: stockStack ? stockStack[index] : '' }));
+    const codeStack = rawCodeStack?.map((rm) => {
+      const [rawRm] = rm;
+      return rawRm;
+    })
+    const priceStack = rawPriceStack?.map((rm) => {
+      const [rawRm] = rm;
+      return rawRm;
+    })
+    return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '', stock: stockStack ? stockStack[index] : '', code: codeStack ? codeStack[index] : '', price: priceStack ? priceStack[index] : '' }
+    ));
   } else {
     return idStack?.map((id, index) => ({ id, text: nameStack ? nameStack[index] : '' }));
   }

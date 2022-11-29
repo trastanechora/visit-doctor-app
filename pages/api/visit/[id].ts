@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { examineVisit } from '@/repository/visit'
+import { examineVisit, medicineVisit } from '@/repository/visit'
 
 type RequestParameters = {
   query: RequestParametersQuery
@@ -29,9 +29,14 @@ const handler = async (
       const processedResult = await examineVisit({ ...parsedBody, id })
       res.status(200).json(processedResult)
     }
+
+    if (parsedBody.action === 'medicine') {
+      const processedResult = await medicineVisit({ ...parsedBody, id })
+      res.status(200).json(processedResult)
+    }
   }
 
-  res.status(200).json(parsedBody)
+  res.status(200).json({ table_name: 'Visit', data: { id: '', error: true } })
 }
 
 export default handler

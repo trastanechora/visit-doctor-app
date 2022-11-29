@@ -88,8 +88,21 @@ export const createVisit = async (body: any) => {
 
 export const examineVisit = async (body: any) => {
   const currentDate = dayjs().format('YYYY-MM-DD');
-  // -------------- ['id', 'patient_id', - 'doctor_id', 'chief_complaint', 'subjectives', 'allergy_history', 'general_condition', 'gcs', 'weight', 'height', 'blood_pressure', 'heart_rate', 'respiration_rate', 'temperature', 'o2_saturation', 'pain_scale', 'physical_examination', 'laboratory_results', 'radiology_result', 'diagnosis', 'plan_or_treatment', 'note', 'visit_date', 'status', 'scheduled_control_date', 'medicine_ids', 'medicine_amounts', 'medicine_subtotal', 'treatment_charge', 'total_treatment_raw', 'total_charge', 'total_charge_raw', 'created_date'];
-  const dataArray = [body.id, body.patientId, body.doctorId, body.chiefComplaint, body.subjectives, body.allergyHistory, body.generalCondition, body.gcs, body.weight, body.height, body.bloodPressure, body.heartRate, body.respirationRate, body.temperature, body.o2Saturation, body.painScale, body.physicalExamination, body.laboratoryResult, body.radiologyResult, body.diagnose, body.planOrTreatment, body.note, null, 'examine', body.scheduledControllDate, null, null, null, null, null, null, currentDate]
+  // -------------- ['id', 'patient_id', - 'doctor_id', 'chief_complaint', 'subjectives', 'allergy_history', 'general_condition', 'gcs', 'weight', 'height', 'blood_pressure', 'heart_rate', 'respiration_rate', 'temperature', 'o2_saturation', 'pain_scale', 'physical_examination', 'laboratory_results', 'radiology_result', 'diagnosis', 'plan_or_treatment', 'note', 'visit_date', 'status', 'scheduled_control_date', 'medicine_ids', 'medicine_amounts', 'medicine_subtotal', 'treatment_charge', 'total_treatment_raw', 'tax', 'tax_raw', 'total_charge', 'total_charge_raw', 'created_date', 'updated_date'];
+  const dataArray = [body.id, body.patientId, body.doctorId, body.chiefComplaint, body.subjectives, body.allergyHistory, body.generalCondition, body.gcs, body.weight, body.height, body.bloodPressure, body.heartRate, body.respirationRate, body.temperature, body.o2Saturation, body.painScale, body.physicalExamination, body.laboratoryResult, body.radiologyResult, body.diagnose, body.planOrTreatment, body.note, null, 'examine', body.scheduledControllDate, null, null, null, null, null, null, null, null, null, null, currentDate]
+  const response = await updateItem({
+    sheetName: SHEET_NAME,
+    lastColumn: LAST_COLUMN,
+    body: dataArray
+  });
+
+  return { table_name: SHEET_NAME, data: response };
+}
+
+export const medicineVisit = async (body: any) => {
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  // -------------- ['id', 'patient_id', - 'doctor_id', 'chief_complaint', 'subjectives', 'allergy_history', 'general_condition', 'gcs', 'weight', 'height', 'blood_pressure', 'heart_rate', 'respiration_rate', 'temperature', 'o2_saturation', 'pain_scale', 'physical_examination', 'laboratory_results', 'radiology_result', 'diagnosis', 'plan_or_treatment', 'note', 'visit_date', 'status', 'scheduled_control_date', 'medicine_ids', 'medicine_amounts', 'medicine_subtotal', 'treatment_charge', 'total_treatment_raw', 'tax', 'tax_raw', 'total_charge', 'total_charge_raw', 'created_date', 'updated_date'];
+  const dataArray = [body.id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 'recipe', null, body.medicineIds, body.medicineAmounts, body.medicineSubtotals, body.fee, body.fee, body.tax, body.tax, body.total, body.total, null, currentDate]
   const response = await updateItem({
     sheetName: SHEET_NAME,
     lastColumn: LAST_COLUMN,

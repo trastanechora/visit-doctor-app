@@ -8,7 +8,7 @@ import styles from '@/styles/Visit.module.css'
 
 import type { NextPageWithCustomProps } from '@/types/custom'
 
-import { formatDate, formatTextVisitStatus, formatAge } from '@/utils/formatter';
+import { formatDate, formatTextVisitStatus, formatAge, formatDiagnosis, formatUnorderedListItem } from '@/utils/formatter';
 import { translateGender } from '@/utils/translator';
 import { statusMapper } from '@/utils/mapper';
 
@@ -41,6 +41,10 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
 
   const handleClickExamine = () => {
     router.push(`/visit/${id}/examine`)
+  }
+
+  const handleClickRecipe = () => {
+    router.push(`/visit/${id}/recipe`)
   }
 
   if (isLoading) return <p>Loading...</p>
@@ -260,8 +264,149 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
 
       {statusMapped.includes('examine') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          Examining Info
+          <Box sx={{ width: '50%', paddingRight: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Keluhan
+            </Typography>
+            {formatUnorderedListItem(detail.chief_complaint)}
+          </Box>
+          <Box sx={{ width: '50%', paddingLeft: 1 }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Riwayat Alergi
+            </Typography>
+            {formatUnorderedListItem(detail.allergy_history)}
+          </Box>
         </Box>
+        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex', flexWrap: 'wrap' }}>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Berat Badan
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.weight} kg
+            </Typography>
+          </Box>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Tinggi Badan
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.height} cm
+            </Typography>
+          </Box>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Temperatur Tubuh
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.temperature} °C
+            </Typography>
+          </Box>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Detak Jantung
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.heart_rate} BPM
+            </Typography>
+          </Box>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Tekanan Darah
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.blood_pressure} mmHg
+            </Typography>
+          </Box>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Pernapasan
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.respiration_rate} BPM
+            </Typography>
+          </Box>
+          <Box sx={{ width: '25%' }}>
+            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+              Saturasi O2
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {detail.o2_saturation} Sp02
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Subjectives
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.subjectives}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Kondisi Umum
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.general_condition}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            GCS
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.gcs}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Pain Scale
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.pain_scale}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Pemeriksaan Fisik
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.physical_examination}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Hasil Laboratorium
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.laboratory_results}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Hasil Radiology
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {detail.radiology_result}
+          </Typography>
+        </Box>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Diagnosis
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {formatDiagnosis(detail.diagnosis)}
+          </Typography>
+        </Box>
+        {detail.scheduled_control_date && <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Jadwal kontrol ulang
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {formatDate(detail.scheduled_control_date)}
+          </Typography>
+        </Box>}
         <Divider sx={{ marginBottom: 3 }} />
       </Container> : null}
 
@@ -289,7 +434,7 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
       <Container maxWidth={false} disableGutters sx={{ width: '100%', marginBottom: 4 }}>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
           {detail.status === 'schedule' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Periksa</Button> : null}
-          {detail.status === 'examine' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Beri Resep Obat</Button> : null}
+          {detail.status === 'examine' ? <Button variant="contained" onClick={handleClickRecipe} disabled={isLoading} sx={{ textTransform: 'none' }}>Beri Resep Obat</Button> : null}
           {detail.status === 'recipe' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Selesaikan Pembayaran</Button> : null}
           {detail.status === 'payment' ? <Button variant="contained" onClick={handleClickExamine} disabled={isLoading} sx={{ textTransform: 'none' }}>Selesaikan Rekam Medis</Button> : null}
         </Box>

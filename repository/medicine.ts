@@ -43,7 +43,9 @@ export const getMedicineOptions = async () => {
   const response = await initListOptions({
     sheetName: SHEET_NAME,
     nameColumn: 'B',
-    stockColumn: 'G'
+    stockColumn: 'G',
+    codeColumn: 'C',
+    priceColumn: 'F'
   });
 
   return { table_name: SHEET_NAME, data: response };
