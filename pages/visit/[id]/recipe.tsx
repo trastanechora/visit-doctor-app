@@ -69,7 +69,9 @@ const RecipeVisitPage: NextPageWithCustomProps = () => {
         .then((responseObject) => {
           setDetail(responseObject.data);
           console.warn('[DETAIL] responseObject.data', responseObject.data)
-          setFormState({ ...formState, patientId: responseObject.data?.patient?.id || '', doctorId: responseObject.data?.doctor?.id || '' })
+          setFormState(prevState => {
+            return { ...prevState, patientId: responseObject.data?.patient?.id || '', doctorId: responseObject.data?.doctor?.id || '' }
+          })
           setLoading(false)
           fetch(`/api/medicine/list`)
             .then((res) => res.json())
@@ -140,7 +142,7 @@ const RecipeVisitPage: NextPageWithCustomProps = () => {
     }
 
     return { subtotal: '-', total: '-', tax: '-', taxPercentage: TAX_RATE, fee: '-' }
-  }, [rows, rows.length]);
+  }, [rows]);
 
   const handleSubmit = () => {
     setLoading(true)
