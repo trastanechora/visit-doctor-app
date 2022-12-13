@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
-import { Typography, Box, Divider, Button, Container } from '@mui/material';
+import { Typography, Box, Divider, Button, Container, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import styles from '@/styles/Visit.module.css'
@@ -173,95 +173,6 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
         <Divider sx={{ marginBottom: 3 }} />
       </Container>
 
-      {/* {statusMapped.includes('schedule') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Keluhan:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.symptoms}
-            </Typography>
-          </Box>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Diagnosa:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {getDiagnosis(detail.diagnosis)}
-            </Typography>
-          </Box>
-        </Box>
-        <Divider sx={{ marginBottom: 3 }} />
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '33%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Jenis Kelamin:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.patient?.gender === 'male' ? 'Laki-laki' : 'Perempuan'}
-            </Typography>
-          </Box>
-          <Box sx={{ width: '33%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Umur:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {calculateAge(detail.patient?.date_of_birth)} Tahun
-            </Typography>
-          </Box>
-        </Box>
-        <Divider sx={{ marginBottom: 3 }} />
-
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Obat:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.medicine_ids}
-            </Typography>
-          </Box>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Harga Obat:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.medicine_subtotal}
-            </Typography>
-          </Box>
-        </Box>
-        <Divider sx={{ marginBottom: 3 }} />
-
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Nomor HP:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.patient?.phone}
-            </Typography>
-          </Box>
-          <Box sx={{ width: '50%' }}>
-            <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-              Nama HP Penjamin:
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {detail.patient?.guarantorPhone}
-            </Typography>
-          </Box>
-        </Box>
-        <Box sx={{ width: '100%', marginBottom: 2 }}>
-          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
-            Alamat:
-          </Typography>
-          <Typography sx={{ fontWeight: '500' }} variant="body1" gutterBottom>
-            {detail.patient?.address}
-          </Typography>
-        </Box>
-        <Divider sx={{ marginBottom: 3 }} />
-      </Container> : null} */}
-
       {statusMapped.includes('examine') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
         <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
           <Box sx={{ width: '50%', paddingRight: 1 }}>
@@ -411,8 +322,53 @@ const VisitDetailPage: NextPageWithCustomProps = () => {
       </Container> : null}
 
       {statusMapped.includes('recipe') ? <Container maxWidth={false} disableGutters sx={{ width: '100%' }}>
-        <Box sx={{ width: '100%', marginBottom: 2, display: 'flex' }}>
-          Recipe Info
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Rincian Resep
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {JSON.parse(detail.medicine_ids).map((medicine_id: string, index: number) => {
+              return (<li key={index}>
+                {medicine_id} | {JSON.parse(detail.medicine_amounts)[index]} Dosis
+              </li>)
+            })}
+          </Typography>
+        </Box>
+        <Divider sx={{ marginBottom: 3 }} />
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Typography sx={{ paddingBottom: 0 }} variant="caption" display="block" color="primary" gutterBottom>
+            Rincian Pembayaran Tertagih
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Rincian</TableCell>
+                  <TableCell align="right">Nominal</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">Obat</TableCell>
+                  <TableCell align="right">{JSON.parse(detail.medicine_subtotal).reduce((total: number, num: number) => {
+                    return total + Math.round(num);
+                  }, 0)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">Biaya Periksa</TableCell>
+                  <TableCell align="right">{detail.treatment_charge}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">PPn</TableCell>
+                  <TableCell align="right">{detail.tax}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">Total</TableCell>
+                  <TableCell align="right">{detail.total_charge}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
         <Divider sx={{ marginBottom: 3 }} />
       </Container> : null}
